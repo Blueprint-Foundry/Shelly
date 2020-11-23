@@ -1,2 +1,2 @@
 # Shelly
-Shelly aims to be a low cost ROS teaching and R&amp;D tool for universities and corporations.
+Shelly aims to be a low cost ROS Robot for teaching and R&amp;D for makers, universities and corporations.
