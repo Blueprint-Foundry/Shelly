@@ -1,0 +1,9 @@
+Designator Footprint               Mid X         Mid Y         Ref X         Ref Y         Pad X         Pad Y TB      Rotation Comment        
+
+J?         PCB-i2ago0utg7vegf89dcd1-1       9995mil       2510mil       9995mil       2510mil  10142.441mil   2411.575mil  T          0.00 Keystone 8190-SEMS
+J?         PCB-i2ago0utg7vegf89dcd1-1       6095mil       2510mil       6095mil       2510mil   6242.441mil   2411.575mil  T          0.00 Keystone 8190-SEMS
+J?         PCB-i2ago0utg7vegf89dcd1-1       5640mil       2510mil       5640mil       2510mil   5787.441mil   2411.575mil  T          0.00 Keystone 8190-SEMS
+J?         PCB-i2ago0utg7vegf89dcd1-1       5190mil       2510mil       5190mil       2510mil   5337.441mil   2411.575mil  T          0.00 Keystone 8190-SEMS
+M1         PCB-x4oi1eoe9j07b9tdo7bi-1   7183.209mil       2200mil       7180mil       2085mil       7185mil       2400mil  T          0.00 28BYJ-48-5V    
+M2         PCB-x4oi1eoe9j07b9tdo7bi-1   8908.209mil       2200mil       8905mil       2085mil       8910mil       2400mil  T          0.00 28BYJ-48-5V    
+
