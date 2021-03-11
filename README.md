@@ -4,6 +4,11 @@ Shelly aims to be a low cost ROS robot for teaching and R&amp;D for makers, univ
 ## Links
 * Circuitmaker page: https://workspace.circuitmaker.com/Projects/Details/Ilia-Baranov/Shelly
 
+## Dependencies
+These must be installed to your environment
+* Arduino Library https://github.com/AwotG/Arduino-MAX17055_Driver
+* Arduino Library https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
+
 ## Licenses
 * Hardware is licensed under Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): https://creativecommons.org/licenses/by-nc/4.0/
 * Software is licensed under BSD 3 Clause: https://opensource.org/licenses/BSD-3-Clause
