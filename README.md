@@ -8,6 +8,8 @@ Shelly aims to be a low cost ROS robot for teaching and R&amp;D for makers, univ
 These must be installed to your environment
 * Arduino Library https://github.com/AwotG/Arduino-MAX17055_Driver
 * Arduino Library https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
+* Arduino Library https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
+* Arduino Library https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary
 
 ## Licenses
 * Hardware is licensed under Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): https://creativecommons.org/licenses/by-nc/4.0/
