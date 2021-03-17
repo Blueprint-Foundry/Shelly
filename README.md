@@ -9,7 +9,8 @@ These must be installed to your environment
 * Arduino Library https://github.com/AwotG/Arduino-MAX17055_Driver
 * Arduino Library https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
 * Arduino Library https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
-* Arduino Library https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary
+* Arduino Library https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary 
+(note: ensure to enable DMP functionality. Edit ICM_20948_C.h and uncomment line 29: #define ICM_20948_USE_DMP
 
 ## Licenses
 * Hardware is licensed under Attribution-NonCommercial 4.0 International (CC BY-NC 4.0): https://creativecommons.org/licenses/by-nc/4.0/
