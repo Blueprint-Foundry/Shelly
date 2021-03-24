@@ -6,7 +6,20 @@ range readings are in units of mm.
 #include <Wire.h>
 #include <VL53L1X.h>
 
+#include "vl53l1_api.h"
 VL53L1X sensor;
+
+VL53L1_Dev_t                   dev;
+VL53L1_DEV                     Dev = &dev;
+
+int statusint, i, x, y, distance[16];
+int left = 0, right = 0, cnt = 0, oldcnt;
+volatile int LightON = 0, OLED_dimmed = 0, OLED_OFF_timeout = 10000;
+long timeMark = 0, DisplayUpdateTime = 0;
+
+VL53L1_UserRoi_t  roiConfig[16]; 
+
+
 
 void setup()
 {
@@ -37,6 +50,8 @@ void setup()
 
 void loop()
 {
+  statusint = VL53L1_SetUserROI(Dev, &roiConfig[0]);
+  
   Serial.print(sensor.read());
   if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
 
