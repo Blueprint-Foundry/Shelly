@@ -1,0 +1,1 @@
+1. get the VL53L1_SetUserROI function working following the instructions in Shelly\Software\ESP32 Sketchpad\TOF Development\Reference\dm00474730-vl53l1x-api-user-manual-stmicroelectronics (working in SPAD_Attempt2 folder)
