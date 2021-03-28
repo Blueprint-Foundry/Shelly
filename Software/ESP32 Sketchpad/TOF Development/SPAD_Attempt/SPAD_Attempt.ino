@@ -1,6 +1,12 @@
 /*
 This example shows how to take simple range measurements with the VL53L1X. The
 range readings are in units of mm.
+
+History
+March 28, 2021
+- try to use polulu libraries to get a single roi, and print continously
+
+
 */
 
 #include <Wire.h>
@@ -18,8 +24,10 @@ volatile int LightON = 0, OLED_dimmed = 0, OLED_OFF_timeout = 10000;
 long timeMark = 0, DisplayUpdateTime = 0;
 
 VL53L1_UserRoi_t  roiConfig[16]; 
+static VL53L1_RangingMeasurementData_t RangingData;
 
 
+int matrix_distance[16];
 
 void setup()
 {
@@ -50,9 +58,24 @@ void setup()
 
 void loop()
 {
-  statusint = VL53L1_SetUserROI(Dev, &roiConfig[0]);
+  statusint = VL53L1_SetUserROI(Dev, &roiConfig[0]); // just check one roi
+
+  if(statusint == 0)
+  {
+    statusint = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
+    
+  }
+
+  VL53L1_clear_interrupt_and_enable_next_range(Dev, VL53L1_DEVICEMEASUREMENTMODE_SINGLESHOT);
+
+  if(statusint == 0)
+  {
+    
+    matrix_distance[0] = RangingData.RangeMilliMeter;
+  }
+
   
-  Serial.print(sensor.read());
+  Serial.print(matrix_distance[0]);
   if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
 
   Serial.println();
