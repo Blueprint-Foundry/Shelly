@@ -1,0 +1,27 @@
+Soft WDT reset
+
+>>>stack>>>
+
+ctx: cont
+sp: 3ffffde0 end: 3fffffc0 offset: 01a0
+3fffff80:  3ffe84ec 3ffee810 3ffee334 402046f0  
+3fffff90:  fe000000 feefeffe feefeffe feefeffe  
+3fffffa0:  3fffdad0 00000000 3ffee838 40205618  
+3fffffb0:  feefeffe feefeffe 3ffe850c 40100e11  
+<<<stack<<<
+
+--------------- CUT HERE FOR EXCEPTION DECODER ---------------
+
+ ets Jan  8 2013,rst cause:2, boot mode:(3,6)
+
+load 0x4010f000, len 3584, room 16 
+tail 0
+chksum 0xb0
+csum 0xb0
+v2843a5ac
+~ld
+VL53L1X Model_ID: 0
+VL53L1X Module_Type: 0
+VL53L1X: 0
+Autonomous Ranging Test
+VL53L1_StartMeasurement failed
