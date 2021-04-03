@@ -174,25 +174,70 @@ void loop()
 {
 #ifdef USE_BLOCKING_LOOP  // this is true
 
-  // blocking wait for data ready
-  status = VL53L1_WaitMeasurementDataReady(Dev);         // driver polling mode first step
+      // blocking wait for data ready
 
-  if(!status)
-  {
-    printRangingData();
-    VL53L1_ClearInterruptAndStartMeasurement(Dev);       // error handling
-  }
-  else
-  {
-    Serial.print(F("Error waiting for data ready: "));
-    Serial.println(status);
-  }
+      static VL53L1_RangingMeasurementData_t RangingData;
+
+      for (i = 0; i < 16; i++) 
+      {
+        // switching ROI configs
+        status_int = VL53L1_SetUserROI(Dev, &roiConfig[i]);
+
+        if (status_int)
+        {
+          Serial.print(F("VL53L1_SetUserROI failed"));
+        }        
+
+        status_int = VL53L1_WaitMeasurementDataReady(Dev);
+
+
+        if (status_int)
+        {
+          Serial.print(F("VL53L1_WaitMeasurementDataReady failed"));
+        }        
+
+        
+        if (!status_int) 
+        {
+          status_int = VL53L1_GetRangingMeasurementData(Dev, &RangingData);  //4mS  
+          VL53L1_clear_interrupt_and_enable_next_range(Dev, VL53L1_DEVICEMEASUREMENTMODE_SINGLESHOT); //2mS
+          
+          if (status_int)
+          {
+              Serial.print(F("VL53L1_GetRangingMeasurementData"));
+          }
+          else  // the ROI SPAD distance was successfully captured for the current SPAD
+          {
+             distance[i] = RangingData.RangeMilliMeter;
+             Serial.printf("d[%i]=%d | ",i,distance[i]);                
+          }
+        }
+        
+      }
+
+      Serial.println();
+
+    /*  
+      status = VL53L1_WaitMeasurementDataReady(Dev);         // driver polling mode first step
+
+      if(!status)
+      {
+          printRangingData();
+          VL53L1_ClearInterruptAndStartMeasurement(Dev);       // error handling
+      }
+      else
+      {
+          Serial.print(F("Error waiting for data ready: "));
+          Serial.println(status);
+      }
+      */
 
 #else
 
   static uint16_t startMs = millis();
   uint8_t isReady;
 
+  Serial.print(F("this shouldn't happen #1"));
   // non-blocking check for data ready
   status = VL53L1_GetMeasurementDataReady(Dev, &isReady);   // driver polling mode second step
 
@@ -236,7 +281,7 @@ void printRangingData()
           if(print_delay_flag == 0)
           { 
               Serial.print(RangingData.RangeStatus);
-              Serial.print(F(","));
+              Serial.print(F(",??"));
               Serial.print(RangingData.RangeMilliMeter);
               Serial.print(F(","));
               Serial.print(RangingData.SignalRateRtnMegaCps/65536.0);
