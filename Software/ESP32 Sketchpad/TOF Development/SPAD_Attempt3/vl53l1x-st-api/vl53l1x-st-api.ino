@@ -74,7 +74,9 @@ VL53L1_DEV                     Dev = &dev;
 // SPAD stuff
 VL53L1_UserRoi_t ROI_OriginalSettings;
 VL53L1_CalibrationData_t CalibrationData;
-int status_int;
+int status_int, i, x, y, distance[16];
+// 16 ROI configurations
+VL53L1_UserRoi_t  roiConfig[16];
 
 
 int status;
@@ -143,6 +145,16 @@ void setup()
   {
     Serial.printf("VL53L1_GetCalibrationData status failure: %d \n",status_int);
     
+  }  
+
+  // Creating 16 ROI definition
+  i = 0;
+  for (y = 0; y < 4; y++) {
+    for (x = 0; x < 4; x++) {
+      roiConfig[i] = {4*x, (15-4*y), (4*x+3), (15-4*y-3)};
+      Serial.printf("rc[%d].TopLeftX = %d, rc.TopLeftY = %d, rc.BotRightX = %d, rc.BotRightY = %d | x = %d, y = %d \n",i,roiConfig[i].TopLeftX,roiConfig[i].TopLeftY, roiConfig[i].BotRightX, roiConfig[i].BotRightY,x,y);
+      i++;
+    }
   }  
 
   // optional polling driver initiation
