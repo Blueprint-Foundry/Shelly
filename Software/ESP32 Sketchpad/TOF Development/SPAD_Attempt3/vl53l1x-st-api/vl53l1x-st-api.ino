@@ -73,6 +73,7 @@ VL53L1_DEV                     Dev = &dev;
 
 // SPAD stuff
 VL53L1_UserRoi_t ROI_OriginalSettings;
+VL53L1_CalibrationData_t CalibrationData;
 int status_int;
 
 
@@ -129,6 +130,20 @@ void setup()
     Serial.printf("GetUserROI status failure: %d \n",status_int);
     
   }
+
+
+  status_int = VL53L1_GetCalibrationData(Dev, &CalibrationData);
+  if(!status_int) // it worked
+  {
+    Serial.printf("optical_centre.x_centre: %d \n", CalibrationData.optical_centre.x_centre);
+    Serial.printf("optical_centre.y_centre: %d \n", CalibrationData.optical_centre.y_centre);
+    
+  }
+  else  // it failed
+  {
+    Serial.printf("VL53L1_GetCalibrationData status failure: %d \n",status_int);
+    
+  }  
 
   // optional polling driver initiation
   if(!status) status = VL53L1_SetDistanceMode(Dev, VL53L1_DISTANCEMODE_LONG);
