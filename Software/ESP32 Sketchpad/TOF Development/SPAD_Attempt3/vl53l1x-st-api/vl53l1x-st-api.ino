@@ -42,6 +42,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  Saad Edits April 2, 2021
  1. The polulu example that connects to the sensor using the "!sensor.init()" function doesn't crash, but the "Dev->I2cDevAddr = 0x52" code does.
     Therefore...I'll put the "sensor.init()" code and see if it works 
+ 2. The above fix didn't work, what did work was adding a 5 second delay to the start of the code to let the TOF sensor wake up before ESP8266 taled to it
+
+ Saad Edits April 3, 2021
+ 1. Will use the functions and structures of "VL53L1_GetUserROI()" and "VL53L1_GetCalibrationData()" to find the default ROI and center X,Y SPADs  
+ 
 
 
 *******************************************************************************/
@@ -65,6 +70,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 VL53L1_Dev_t                   dev;
 VL53L1_DEV                     Dev = &dev;
+
+// SPAD stuff
+VL53L1_UserRoi_t ROI_OriginalSettings;
+int status_int;
+
 
 int status;
 int print_delay_flag = 0;
@@ -99,9 +109,28 @@ void setup()
   Serial.println(wordData, HEX);
 
   Serial.println(F("Autonomous Ranging Test"));
-  status = VL53L1_WaitDeviceBooted(Dev);
-  if(!status) status = VL53L1_DataInit(Dev);
-  if(!status) status = VL53L1_StaticInit(Dev);
+  status = VL53L1_WaitDeviceBooted(Dev);               // need to do first                        
+  if(!status) status = VL53L1_DataInit(Dev);           // need to do second
+  if(!status) status = VL53L1_StaticInit(Dev);         // need to do third
+
+  // find default ROI and center co-ordinates (debug)
+
+  status_int = VL53L1_GetUserROI(Dev, &ROI_OriginalSettings);
+  if(!status_int) // it worked
+  {
+    Serial.printf("orig top leftX: %d \n",ROI_OriginalSettings.TopLeftX);
+    Serial.printf("orig top leftY: %d \n",ROI_OriginalSettings.TopLeftY);
+    Serial.printf("orig bot rightX: %d \n",ROI_OriginalSettings.BotRightX);
+    Serial.printf("orig bot rightY: %d \n",ROI_OriginalSettings.BotRightY);
+    
+  }
+  else  // it failed
+  {
+    Serial.printf("GetUserROI status failure: %d \n",status_int);
+    
+  }
+
+  // optional polling driver initiation
   if(!status) status = VL53L1_SetDistanceMode(Dev, VL53L1_DISTANCEMODE_LONG);
   if(!status) status = VL53L1_SetMeasurementTimingBudgetMicroSeconds(Dev, (uint32_t)MEASUREMENT_BUDGET_MS * 1000);
   if(!status) status = VL53L1_SetInterMeasurementPeriodMilliSeconds(Dev, INTER_MEASUREMENT_PERIOD_MS);
@@ -116,15 +145,15 @@ void setup()
 
 void loop()
 {
-#ifdef USE_BLOCKING_LOOP
+#ifdef USE_BLOCKING_LOOP  // this is true
 
   // blocking wait for data ready
-  status = VL53L1_WaitMeasurementDataReady(Dev);
+  status = VL53L1_WaitMeasurementDataReady(Dev);         // driver polling mode first step
 
   if(!status)
   {
     printRangingData();
-    VL53L1_ClearInterruptAndStartMeasurement(Dev);
+    VL53L1_ClearInterruptAndStartMeasurement(Dev);       // error handling
   }
   else
   {
@@ -138,7 +167,7 @@ void loop()
   uint8_t isReady;
 
   // non-blocking check for data ready
-  status = VL53L1_GetMeasurementDataReady(Dev, &isReady);
+  status = VL53L1_GetMeasurementDataReady(Dev, &isReady);   // driver polling mode second step
 
   if(!status)
   {
@@ -147,7 +176,7 @@ void loop()
 
       printRangingData();
 
-      VL53L1_ClearInterruptAndStartMeasurement(Dev);
+      VL53L1_ClearInterruptAndStartMeasurement(Dev);       // driver polling third step
       startMs = millis();
     }
     else if((uint16_t)(millis() - startMs) > VL53L1_RANGE_COMPLETION_POLLING_TIMEOUT_MS)
@@ -174,7 +203,7 @@ void printRangingData()
 {
   static VL53L1_RangingMeasurementData_t RangingData;
 
-  status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
+  status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);         // driver polling mode third step
   if(!status)
   {
           if(print_delay_flag == 0)
@@ -191,7 +220,7 @@ void printRangingData()
           else
           {
               print_delay_counter++;
-              if(print_delay_counter > 100)
+              if(print_delay_counter > 25)
               {
                 print_delay_flag = 0;
                 print_delay_counter = 0;
