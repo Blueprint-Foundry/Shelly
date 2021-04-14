@@ -20,7 +20,7 @@ jobs:
         with:
           platforms: |
             - source-url: https://github.com/espressif/arduino-esp32.git
-              name: espressif:esp32:ESP32 Wrover Module
+              name: espressif:ESP32 Wrover Module
           verbose: true
           enable-deltas-report: true
           enable-warnings-report: true
