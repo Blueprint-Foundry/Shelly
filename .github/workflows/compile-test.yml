@@ -25,3 +25,8 @@ jobs:
             - ./
           libraries: |
             - source-url: https://github.com/espressif/arduino-esp32.git
+            - source-url: https://github.com/AwotG/Arduino-MAX17055_Driver
+            - source-url: https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
+            - source-url: https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
+            - source-url: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary
+            - source-url: https://github.com/pololu/vl53l1x-st-api-arduino/tree/master/vl53l1x-st-api
