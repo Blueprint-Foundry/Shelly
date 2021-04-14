@@ -20,7 +20,7 @@ jobs:
         with:
           platforms: |
             - source-url: https://github.com/espressif/arduino-esp32.git
-            - name: espressif:esp32
+              name: espressif:esp32
           verbose: true
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
