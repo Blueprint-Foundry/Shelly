@@ -18,15 +18,15 @@ jobs:
       - name: Compile sketch
         uses: arduino/compile-sketches@v1
         with:
-          # The default is to compile for the Arduino Uno board. If you want to compile for other boards, use the `fqbn` input.
+          fbqn: espressif:esp32:esp32s2:PSRAM=enabled,PartitionScheme=huge_app
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
             - ./
           libraries: |
             - source-url: https://github.com/espressif/arduino-esp32.git
-            - source-url: https://github.com/AwotG/Arduino-MAX17055_Driver
-            - source-url: https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
-            - source-url: https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
-            - source-url: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary
-            - source-url: https://github.com/pololu/vl53l1x-st-api-arduino/tree/master/vl53l1x-st-api
+            - source-url: https://github.com/AwotG/Arduino-MAX17055_Driver.git
+            - source-url: https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library.git
+            - source-url: https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library.git
+            - source-url: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary.git
+            - source-url: https://github.com/pololu/vl53l1x-st-api-arduino/tree/master/vl53l1x-st-api.git
