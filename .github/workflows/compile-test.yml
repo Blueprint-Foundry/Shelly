@@ -18,9 +18,10 @@ jobs:
       - name: Compile sketch
         uses: arduino/compile-sketches@v1
         with:
+          fqbn: esp32:esp32:esp32wrover
           platforms: |
-            - source-url: https://github.com/espressif/arduino-esp32.git
-              name: espressif:ESP32 Wrover Module
+            - source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+              name: esp32:esp32
           verbose: true
           enable-deltas-report: true
           enable-warnings-report: true
