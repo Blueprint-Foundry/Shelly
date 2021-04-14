@@ -18,7 +18,8 @@ jobs:
       - name: Compile sketch
         uses: arduino/compile-sketches@v1
         with:
-          fbqn: espressif:esp32:esp32s2:PSRAM=enabled,PartitionScheme=huge_app
+          fqbn: espressif:esp32:esp32s2:PSRAM=enabled,PartitionScheme=huge_app
+          verbose: true
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
