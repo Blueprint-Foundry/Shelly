@@ -1,24 +1,24 @@
 /*******************************************************************************
 
-This sketch file is derived from an example program
-(Projects\Multi\Examples\VL53L1X\SimpleRangingExamples\Src\main.c) in the
-X-CUBE-53L1A1 Long Distance Ranging sensor software expansion for STM32Cube
-from ST, available here:
+  This sketch file is derived from an example program
+  (Projects\Multi\Examples\VL53L1X\SimpleRangingExamples\Src\main.c) in the
+  X-CUBE-53L1A1 Long Distance Ranging sensor software expansion for STM32Cube
+  from ST, available here:
 
-http://www.st.com/content/st_com/en/products/ecosystems/stm32-open-development-environment/stm32cube-expansion-software/stm32-ode-sense-sw/x-cube-53l1a1.html
+  http://www.st.com/content/st_com/en/products/ecosystems/stm32-open-development-environment/stm32cube-expansion-software/stm32-ode-sense-sw/x-cube-53l1a1.html
 
-The rest of the files in this sketch are from the STSW-IMG007 VL53L1X API from
-ST, available here:
+  The rest of the files in this sketch are from the STSW-IMG007 VL53L1X API from
+  ST, available here:
 
-http://www.st.com/content/st_com/en/products/embedded-software/proximity-sensors-software/stsw-img007.html
+  http://www.st.com/content/st_com/en/products/embedded-software/proximity-sensors-software/stsw-img007.html
 
 ********************************************************************************
 
-COPYRIGHT(c) 2017 STMicroelectronics
-COPYRIGHT(c) 2018 Pololu Corporation
+  COPYRIGHT(c) 2017 STMicroelectronics
+  COPYRIGHT(c) 2018 Pololu Corporation
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without modification,
+  are permitted provided that the following conditions are met:
   1. Redistributions of source code must retain the above copyright notice,
      this list of conditions and the following disclaimer.
   2. Redistributions in binary form must reproduce the above copyright notice,
@@ -28,25 +28,25 @@ are permitted provided that the following conditions are met:
      may be used to endorse or promote products derived from this software
      without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- Saad Edits April 2, 2021
- 1. The polulu example that connects to the sensor using the "!sensor.init()" function doesn't crash, but the "Dev->I2cDevAddr = 0x52" code does.
-    Therefore...I'll put the "sensor.init()" code and see if it works 
- 2. The above fix didn't work, what did work was adding a 5 second delay to the start of the code to let the TOF sensor wake up before ESP8266 taled to it
+  Saad Edits April 2, 2021
+  1. The polulu example that connects to the sensor using the "!sensor.init()" function doesn't crash, but the "Dev->I2cDevAddr = 0x52" code does.
+    Therefore...I'll put the "sensor.init()" code and see if it works
+  2. The above fix didn't work, what did work was adding a 5 second delay to the start of the code to let the TOF sensor wake up before ESP8266 taled to it
 
- Saad Edits April 3, 2021
- 1. Will use the functions and structures of "VL53L1_GetUserROI()" and "VL53L1_GetCalibrationData()" to find the default ROI and center X,Y SPADs  
- 
+  Saad Edits April 3, 2021
+  1. Will use the functions and structures of "VL53L1_GetUserROI()" and "VL53L1_GetCalibrationData()" to find the default ROI and center X,Y SPADs
+
 
 
 *******************************************************************************/
@@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // By default, this example blocks while waiting for sensor data to be ready.
 // Comment out this line to poll for data ready in a non-blocking way instead.
-#define USE_BLOCKING_LOOP
+//#define USE_BLOCKING_LOOP
 
 // Timing budget set through VL53L1_SetMeasurementTimingBudgetMicroSeconds().
 #define MEASUREMENT_BUDGET_MS 50
@@ -90,7 +90,7 @@ void setup()
 
   delay(5000);
 
-  Wire.begin();
+  Wire.begin(25, 23); //Join I2C bus, set SDA and SCL pins respectively
   Wire.setClock(400000);
   Serial.begin(115200);
 
@@ -112,61 +112,61 @@ void setup()
   Serial.println(wordData, HEX);
 
   Serial.println(F("Autonomous Ranging Test"));
-  status = VL53L1_WaitDeviceBooted(Dev);               // need to do first                        
-  if(!status) status = VL53L1_DataInit(Dev);           // need to do second
-  if(!status) status = VL53L1_StaticInit(Dev);         // need to do third
+  status = VL53L1_WaitDeviceBooted(Dev);               // need to do first
+  if (!status) status = VL53L1_DataInit(Dev);          // need to do second
+  if (!status) status = VL53L1_StaticInit(Dev);        // need to do third
 
   // find default ROI and center co-ordinates (debug)
 
   status_int = VL53L1_GetUserROI(Dev, &ROI_OriginalSettings);
-  if(!status_int) // it worked
+  if (!status_int) // it worked
   {
-    Serial.printf("orig top leftX: %d \n",ROI_OriginalSettings.TopLeftX);
-    Serial.printf("orig top leftY: %d \n",ROI_OriginalSettings.TopLeftY);
-    Serial.printf("orig bot rightX: %d \n",ROI_OriginalSettings.BotRightX);
-    Serial.printf("orig bot rightY: %d \n",ROI_OriginalSettings.BotRightY);
-    
+    Serial.printf("orig top leftX: %d \n", ROI_OriginalSettings.TopLeftX);
+    Serial.printf("orig top leftY: %d \n", ROI_OriginalSettings.TopLeftY);
+    Serial.printf("orig bot rightX: %d \n", ROI_OriginalSettings.BotRightX);
+    Serial.printf("orig bot rightY: %d \n", ROI_OriginalSettings.BotRightY);
+
   }
   else  // it failed
   {
-    Serial.printf("GetUserROI status failure: %d \n",status_int);
-    
+    Serial.printf("GetUserROI status failure: %d \n", status_int);
+
   }
 
 
   status_int = VL53L1_GetCalibrationData(Dev, &CalibrationData);
-  if(!status_int) // it worked
+  if (!status_int) // it worked
   {
     Serial.printf("optical_centre.x_centre: %d \n", CalibrationData.optical_centre.x_centre);
     Serial.printf("optical_centre.y_centre: %d \n", CalibrationData.optical_centre.y_centre);
-    
+
   }
   else  // it failed
   {
-    Serial.printf("VL53L1_GetCalibrationData status failure: %d \n",status_int);
-    
-  }  
+    Serial.printf("VL53L1_GetCalibrationData status failure: %d \n", status_int);
+
+  }
 
   // Creating 16 ROI definition
   i = 0;
   for (y = 0; y < 4; y++) {
     for (x = 0; x < 4; x++) {
-      roiConfig[i] = {4*x, (15-4*y), (4*x+3), (15-4*y-3)};
-      Serial.printf("rc[%d].TopLeftX = %d, rc.TopLeftY = %d, rc.BotRightX = %d, rc.BotRightY = %d | x = %d, y = %d \n",i,roiConfig[i].TopLeftX,roiConfig[i].TopLeftY, roiConfig[i].BotRightX, roiConfig[i].BotRightY,x,y);
+      roiConfig[i] = {4 * x, (15 - 4 * y), (4 * x + 3), (15 - 4 * y - 3)};
+      Serial.printf("rc[%d].TopLeftX = %d, rc.TopLeftY = %d, rc.BotRightX = %d, rc.BotRightY = %d | x = %d, y = %d \n", i, roiConfig[i].TopLeftX, roiConfig[i].TopLeftY, roiConfig[i].BotRightX, roiConfig[i].BotRightY, x, y);
       i++;
     }
-  }  
+  }
 
   // optional polling driver initiation
-  if(!status) status = VL53L1_SetDistanceMode(Dev, VL53L1_DISTANCEMODE_LONG);
-  if(!status) status = VL53L1_SetMeasurementTimingBudgetMicroSeconds(Dev, (uint32_t)MEASUREMENT_BUDGET_MS * 1000);
-  if(!status) status = VL53L1_SetInterMeasurementPeriodMilliSeconds(Dev, INTER_MEASUREMENT_PERIOD_MS);
-  if(!status) status = VL53L1_StartMeasurement(Dev);
+  if (!status) status = VL53L1_SetDistanceMode(Dev, VL53L1_DISTANCEMODE_LONG);
+  if (!status) status = VL53L1_SetMeasurementTimingBudgetMicroSeconds(Dev, (uint32_t)MEASUREMENT_BUDGET_MS * 1000);
+  if (!status) status = VL53L1_SetInterMeasurementPeriodMilliSeconds(Dev, INTER_MEASUREMENT_PERIOD_MS);
+  if (!status) status = VL53L1_StartMeasurement(Dev);
 
-  if(status)
+  if (status)
   {
     Serial.println(F("VL53L1_StartMeasurement failed"));
-    while(1);
+    while (1);
   }
 }
 
@@ -174,63 +174,63 @@ void loop()
 {
 #ifdef USE_BLOCKING_LOOP  // this is true
 
-      // blocking wait for data ready
+  // blocking wait for data ready
 
-      static VL53L1_RangingMeasurementData_t RangingData;
+  static VL53L1_RangingMeasurementData_t RangingData;
 
-      for (i = 0; i < 16; i++) 
+  for (i = 0; i < 16; i++)
+  {
+    // switching ROI configs
+    status_int = VL53L1_SetUserROI(Dev, &roiConfig[i]);
+
+    if (status_int)
+    {
+      Serial.print(F("VL53L1_SetUserROI failed"));
+    }
+
+    status_int = VL53L1_WaitMeasurementDataReady(Dev);
+
+
+    if (status_int)
+    {
+      Serial.print(F("VL53L1_WaitMeasurementDataReady failed"));
+    }
+
+
+    if (!status_int)
+    {
+      status_int = VL53L1_GetRangingMeasurementData(Dev, &RangingData);  //4mS
+      VL53L1_clear_interrupt_and_enable_next_range(Dev, VL53L1_DEVICEMEASUREMENTMODE_SINGLESHOT); //2mS
+
+      if (status_int)
       {
-        // switching ROI configs
-        status_int = VL53L1_SetUserROI(Dev, &roiConfig[i]);
-
-        if (status_int)
-        {
-          Serial.print(F("VL53L1_SetUserROI failed"));
-        }        
-
-        status_int = VL53L1_WaitMeasurementDataReady(Dev);
-
-
-        if (status_int)
-        {
-          Serial.print(F("VL53L1_WaitMeasurementDataReady failed"));
-        }        
-
-        
-        if (!status_int) 
-        {
-          status_int = VL53L1_GetRangingMeasurementData(Dev, &RangingData);  //4mS  
-          VL53L1_clear_interrupt_and_enable_next_range(Dev, VL53L1_DEVICEMEASUREMENTMODE_SINGLESHOT); //2mS
-          
-          if (status_int)
-          {
-              Serial.print(F("VL53L1_GetRangingMeasurementData"));
-          }
-          else  // the ROI SPAD distance was successfully captured for the current SPAD
-          {
-             distance[i] = RangingData.RangeMilliMeter;
-             Serial.printf("d[%i]=%d | ",i,distance[i]);                
-          }
-        }
-        
+        Serial.print(F("VL53L1_GetRangingMeasurementData"));
       }
-
-      Serial.println();
-
-    /*  
-      status = VL53L1_WaitMeasurementDataReady(Dev);         // driver polling mode first step
-
-      if(!status)
+      else  // the ROI SPAD distance was successfully captured for the current SPAD
       {
-          printRangingData();
-          VL53L1_ClearInterruptAndStartMeasurement(Dev);       // error handling
+        distance[i] = RangingData.RangeMilliMeter;
+        Serial.printf("d[%i]=%d | ", i, distance[i]);
       }
-      else
-      {
-          Serial.print(F("Error waiting for data ready: "));
-          Serial.println(status);
-      }
-      */
+    }
+
+  }
+
+  Serial.println();
+
+  /*
+    status = VL53L1_WaitMeasurementDataReady(Dev);         // driver polling mode first step
+
+    if(!status)
+    {
+        printRangingData();
+        VL53L1_ClearInterruptAndStartMeasurement(Dev);       // error handling
+    }
+    else
+    {
+        Serial.print(F("Error waiting for data ready: "));
+        Serial.println(status);
+    }
+  */
 
 #else
 
@@ -241,9 +241,9 @@ void loop()
   // non-blocking check for data ready
   status = VL53L1_GetMeasurementDataReady(Dev, &isReady);   // driver polling mode second step
 
-  if(!status)
+  if (!status)
   {
-    if(isReady)
+    if (isReady)
     {
 
       printRangingData();
@@ -251,7 +251,7 @@ void loop()
       VL53L1_ClearInterruptAndStartMeasurement(Dev);       // driver polling third step
       startMs = millis();
     }
-    else if((uint16_t)(millis() - startMs) > VL53L1_RANGE_COMPLETION_POLLING_TIMEOUT_MS)
+    else if ((uint16_t)(millis() - startMs) > VL53L1_RANGE_COMPLETION_POLLING_TIMEOUT_MS)
     {
       Serial.print(F("Timeout waiting for data ready."));
       VL53L1_ClearInterruptAndStartMeasurement(Dev);
@@ -276,28 +276,28 @@ void printRangingData()
   static VL53L1_RangingMeasurementData_t RangingData;
 
   status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);         // driver polling mode third step
-  if(!status)
+  if (!status)
   {
-          if(print_delay_flag == 0)
-          { 
-              Serial.print(RangingData.RangeStatus);
-              Serial.print(F(",??"));
-              Serial.print(RangingData.RangeMilliMeter);
-              Serial.print(F(","));
-              Serial.print(RangingData.SignalRateRtnMegaCps/65536.0);
-              Serial.print(F(","));
-              Serial.println(RangingData.AmbientRateRtnMegaCps/65336.0);
-              print_delay_flag = 1;
-          }
-          else
-          {
-              print_delay_counter++;
-              if(print_delay_counter > 25)
-              {
-                print_delay_flag = 0;
-                print_delay_counter = 0;
-              }
-          }
-          
+    if (print_delay_flag == 0)
+    {
+      Serial.print(RangingData.RangeStatus);
+      Serial.print(F(",??"));
+      Serial.print(RangingData.RangeMilliMeter);
+      Serial.print(F(","));
+      Serial.print(RangingData.SignalRateRtnMegaCps / 65536.0);
+      Serial.print(F(","));
+      Serial.println(RangingData.AmbientRateRtnMegaCps / 65336.0);
+      print_delay_flag = 1;
+    }
+    else
+    {
+      print_delay_counter++;
+      if (print_delay_counter > 25)
+      {
+        print_delay_flag = 0;
+        print_delay_counter = 0;
+      }
+    }
+
   }
 }

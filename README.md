@@ -1,8 +1,10 @@
 ![Shelly](https://github.com/Blueprint-Foundry/Shelly/blob/main/Docs/shelly-logo-black.jpg)
 Shelly aims to be a low cost ROS robot for teaching and R&amp;D for makers, universities and corporations.
 
+[![Compile Sketch](https://github.com/Blueprint-Foundry/Shelly/actions/workflows/compile-test.yml/badge.svg)](https://github.com/Blueprint-Foundry/Shelly/actions/workflows/compile-test.yml)
+
 ## Links
-* Circuitmaker page: https://workspace.circuitmaker.com/Projects/Details/Ilia-Baranov/Shelly
+* Circuitmaker page for the Hardware: https://workspace.circuitmaker.com/Projects/Details/Ilia-Baranov/Shelly
 
 ## Dependencies
 These must be installed to your environment
