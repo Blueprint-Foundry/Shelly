@@ -31,8 +31,8 @@ jobs:
             - Software/ESP32 Sketchpad/DevKit
             - Software/ESP32 Sketchpad/Speed Test
           libraries: |
-            - source-url: https://github.com/bblanchon/ArduinoJson
-            - source-url: https://github.com/Links2004/arduinoWebSockets
+            - source-url: https://github.com/bblanchon/ArduinoJson.git
+            - source-url: https://github.com/Links2004/arduinoWebSockets.git
             - source-url: https://github.com/AwotG/Arduino-MAX17055_Driver.git
             - source-url: https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library.git
             - source-url: https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library.git
