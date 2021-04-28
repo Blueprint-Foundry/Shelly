@@ -23,9 +23,9 @@
 WebSocketsClient webSocket; // this is a websocket client object 
 
 uint8_t pin_led = 2;                            // pin 2 is LED on Wemos D1 Mini?
-char* ssid = "tinman&peaches-2G";
-char* password = "220619love";
-
+char* ssid = "*******";
+char* password = "********";
+ 
 int sum = 0;
 
   char buffer[200];
