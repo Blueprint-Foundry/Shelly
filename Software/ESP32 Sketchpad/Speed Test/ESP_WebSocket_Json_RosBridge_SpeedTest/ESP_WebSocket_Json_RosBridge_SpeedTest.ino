@@ -15,16 +15,16 @@
  *  - 
  */
 
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <WiFi.h>
+#include <WebServer.h>
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
 
 WebSocketsClient webSocket; // this is a websocket client object 
 
 uint8_t pin_led = 2;                            // pin 2 is LED on Wemos D1 Mini?
-char* ssid = "SmartRG-dec9";
-char* password = "**********";
+char* ssid = "tinman&peaches-2G";
+char* password = "220619love";
 
 int sum = 0;
 
