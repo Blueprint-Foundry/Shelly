@@ -31,6 +31,7 @@ uint8_t pin_led = 2;                            // pin 2 is LED on Wemos D1 Mini
   2. Place the following text in the file:
   #define HOME_SSID "replace with your wifi ssid"
   #define PWD "replace your wifi password"
+  #define IP "replace with your laptop's IP"
   3. Save.
 */
 #include "wifi.h"
@@ -109,7 +110,7 @@ void setup()
   Serial.println(WiFi.localIP()); // from the ESP8266WiFi.h class
 
 
-  webSocket.begin("192.168.1.4", 9090, "/");  // on server side, run the begin method within the websocket object
+  webSocket.begin(IP, 9090, "/");  // on server side, run the begin method within the websocket object
   webSocket.onEvent(webSocketEvent); // if a request happens to the server, trigger this function
 
   // Allocate the JSON document
