@@ -23,8 +23,17 @@
 WebSocketsClient webSocket; // this is a websocket client object
 
 uint8_t pin_led = 2;                            // pin 2 is LED on Wemos D1 Mini?
-const char* ssid = "*********";
-const char* password = "*********";
+
+/*
+  This includes wifi credentials, ensuring they are not checked into a repo
+
+  1. Create a file called "wifi.h" in the same folder
+  2. Place the following text in the file:
+  #define HOME_SSID "replace with your wifi ssid"
+  #define PWD "replace your wifi password"
+  3. Save.
+*/
+#include "wifi.h"
 
 int sum = 0;
 
@@ -86,7 +95,7 @@ void setup()
 
   Serial.print("Attempting to connect:");
 
-  WiFi.begin(ssid, password); // from the ESP8266WiFi.h class
+  WiFi.begin(HOME_SSID, PWD);
 
   while (WiFi.status() != WL_CONNECTED) // if it's not connected to home wi-fi
   {
