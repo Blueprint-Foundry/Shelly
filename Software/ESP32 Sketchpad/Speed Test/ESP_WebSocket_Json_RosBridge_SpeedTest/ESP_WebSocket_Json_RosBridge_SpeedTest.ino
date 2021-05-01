@@ -34,7 +34,7 @@ uint8_t pin_led = 2;                            // pin 2 is LED on Wemos D1 Mini
   #define IP "replace with your laptop's IP"
   3. Save.
 */
-#include "wifi.h"
+#include "wifi_details.h"
 
 int sum = 0;
 

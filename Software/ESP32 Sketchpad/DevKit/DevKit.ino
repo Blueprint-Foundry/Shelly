@@ -1,5 +1,20 @@
 #include <Wire.h>
 #include <PI4IOE5V96248.h>
+#include <EAAPMST3923A2.h>
+#include <Arduino-MAX17055_Driver.h>
+#include <ICM_20948.h>
+
+/*
+  This includes wifi credentials, ensuring they are not checked into a repo
+
+  1. Create a file called "wifi.h" in the same folder
+  2. Place the following text in the file:
+  #define HOME_SSID "replace with your wifi ssid"
+  #define PWD "replace your wifi password"
+  #define IP "replace with your laptop's IP"
+  3. Save.
+*/
+#include "wifi_details.h"
 
 void TaskMotors( void *pvParameters );
 void TaskBlank( void *pvParameters );
