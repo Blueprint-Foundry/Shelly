@@ -1,0 +1,38 @@
+rst:0x1 (POWERON_RESET),boot:0x37 (SPI_FAST_FLASH_BOOT)
+flash read err, 1000
+ets_main.c 371 
+ets Jun  8 2016 00:22:57
+
+rst:0x10 (RTCWDT_RTC_RESET),boot:0x37 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:1
+load:0x3fff0018,len:4
+load:0x3fff001c,len:1216
+ho 0 tail 12 room 4
+load:0x40078000,len:10944
+load:0x40080400,len:6388
+entry 0x400806b4
+VL53L1X Model_ID: EA
+VL53L1X Module_Type: CC
+VL53L1X: EACC
+Autonomous Ranging Test
+orig top leftX: 0 
+orig top leftY: 15 
+orig bot rightX: 15 
+orig bot rightY: 0 
+optical_centre.x_centre: 128 
+optical_centre.y_centre: 112 
+rc[0].TopLeftX = 0, rc.TopLeftY = 15, rc.BotRightX = 3, rc.BotRightY = 12 | x = 0, y = 0 
+rc[1].TopLeftX = 4, rc.TopLeftY = 15, rc.BotRightX = 7, rc.BotRightY = 12 | x = 1, y = 0 
+rc[2].TopLeftX = 8, rc.TopLeftY = 15, rc.BotRightX = 11, rc.BotRightY = 12 | x = 2, y = 0 
+rc[3].TopLeftX = 12, rc.TopLeftY = 15, rc.BotRightX = 15, rc.BotRightY = 12 | x = 3, y = 0 
+rc[4].TopLeftX = 0, rc.TopLeftY = 11, rc.BotRightX = 3, rc.BotRightY = 8 | x = 0, y = 1 
+rc[5].TopLeftX = 4, rc.TopLeftY = 11, rc.BotRightX = 7, rc.BotRightY = 8 | x = 1, y = 1 
+rc[6].TopLeftX = 8, rc.TopLeftY = 11, rc.BotRightX = 11, rc.BotRightY = 8 | x = 2, y = 1 
+rc[7].TopLeftX = 12, rc.TopLeftY = 11, rc.BotRightX = 15, rc.BotRightY = 8 | x = 3, y = 1 
+rc[8].TopLeftX = 0, rc.TopLeftY = 7, rc.BotRightX = 3, rc.BotRightY = 4 | x = 0, y = 2 
+rc[9].TopLeftX = 4, rc.TopLeftY = 7, rc.BotRightX = 7, rc.BotRightY = 4 | x = 1, y = 2 
+rc[10].TopLeftX = 8, rc.TopLeftY = 7, rc.BotRightX = 11, rc.BotRightY = 4 | x = 2, y = 2 
+rc[11].TopLeftX = 12, rc.TopLeftY = 7, rc.BotRightX = 15, rc.BotRightY = 4 | x = 3, y = 2 
+rc[12].TopLeftX = 0, rc.TopLeftY = 3, rc.BotRightX = 3, rc.BotRightY = 0 | x = 0, y = 3 
