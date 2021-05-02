@@ -310,7 +310,7 @@ void TaskBlank(void *pvParameters)  // This is a task.
         Serial.print(gyro_z);
         Serial.print(F(" ZB:"));
         Serial.println(gyro_zb);
-        Serial.println(IMU->temp());
+        Serial.println(IMU.temp());
 
       }
     }
