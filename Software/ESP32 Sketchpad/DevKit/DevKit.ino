@@ -274,9 +274,9 @@ void TaskBlank(void *pvParameters)  // This is a task.
       }
       if ((data.header & DMP_header_bitmap_Accel) > 0) // Check for Accel
       {
-        float acc_x = (float)data.Raw_Accel.Data.X/107.1; // Extract the raw accelerometer data
-        float acc_y = (float)data.Raw_Accel.Data.Y/107.1;
-        float acc_z = (float)data.Raw_Accel.Data.Z/107.1;
+        float acc_x = (float)data.Raw_Accel.Data.X / 107.1; // Extract the raw accelerometer data
+        float acc_y = (float)data.Raw_Accel.Data.Y / 107.1;
+        float acc_z = (float)data.Raw_Accel.Data.Z / 107.1;
 
         json_Publish_IMU["msg"]["linear_acceleration"]["x"] = acc_x;
         json_Publish_IMU["msg"]["linear_acceleration"]["y"] = acc_y; // m/s^2
@@ -340,4 +340,14 @@ void SetupJSON() {
   json_Publish_IMU["topic"] = "/Shelly/Imu";
   json_Publish_IMU["type"] = "sensor_msgs/Imu";
   json_Publish_IMU["msg"]["header"]["frame_id"] = "/Shelly/Imu";
+  json_Publish_IMU["msg"]["orientation"]["x"] = 0;
+  json_Publish_IMU["msg"]["orientation"]["y"] = 0;
+  json_Publish_IMU["msg"]["orientation"]["z"] = 0;
+  json_Publish_IMU["msg"]["orientation"]["w"] = 0;
+  json_Publish_IMU["msg"]["linear_acceleration"]["x"] = 0;
+  json_Publish_IMU["msg"]["linear_acceleration"]["y"] = 0; // m/s^2
+  json_Publish_IMU["msg"]["linear_acceleration"]["z"] = 0;
+  json_Publish_IMU["msg"]["angular_velocity"]["x"] = 0;
+  json_Publish_IMU["msg"]["angular_velocity"]["y"] = 0; //rad/s
+  json_Publish_IMU["msg"]["angular_velocity"]["z"] = 0;
 }
