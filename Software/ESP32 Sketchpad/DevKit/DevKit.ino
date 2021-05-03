@@ -87,9 +87,11 @@ void setup() {
   IMU_success &= (IMU.enableDMPSensor(INV_ICM20948_SENSOR_ORIENTATION) == ICM_20948_Stat_Ok); // enable 9-axis quaternion + heading accuracy
   IMU_success &= (IMU.enableDMPSensor(INV_ICM20948_SENSOR_ACCELEROMETER) == ICM_20948_Stat_Ok); // enable 16 bit raw accel
   IMU_success &= (IMU.enableDMPSensor(INV_ICM20948_SENSOR_RAW_GYROSCOPE) == ICM_20948_Stat_Ok); // enable 16bit raw gyro
+  //IMU_success &= (IMU.enableDMPSensor(INV_ICM20948_SENSOR_GYROSCOPE) == ICM_20948_Stat_Ok); // enable calibrated(?) gryoscope
   IMU_success &= (IMU.setDMPODRrate(DMP_ODR_Reg_Quat9, 10) == ICM_20948_Stat_Ok);
   IMU_success &= (IMU.setDMPODRrate(DMP_ODR_Reg_Accel, 10) == ICM_20948_Stat_Ok);
   IMU_success &= (IMU.setDMPODRrate(DMP_ODR_Reg_Gyro, 10) == ICM_20948_Stat_Ok);
+  //IMU_success &= (IMU.setDMPODRrate(DMP_ODR_Reg_Gyro_Calibr, 10) == ICM_20948_Stat_Ok);
   IMU_success &= (IMU.enableFIFO() == ICM_20948_Stat_Ok);
   IMU_success &= (IMU.enableDMP() == ICM_20948_Stat_Ok);
   IMU_success &= (IMU.resetDMP() == ICM_20948_Stat_Ok);
@@ -176,23 +178,23 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           String topic  = json_recievedmessage["topic"];
           if (topic == "/Shelly/header_sent")
           {
-            serializeJsonPretty(json_recievedmessage, Serial);
+            //serializeJsonPretty(json_recievedmessage, Serial);
             //int seq  = json_recievedmessage["msg"]["seq"];
             //Serial.println(seq);
             gettimeofday(&tv, NULL);
-            Serial.print ("-----> Was ");
-            Serial.print (tv.tv_sec);
-            Serial.print (" ");
-            Serial.print (tv.tv_usec);
+            //            Serial.print ("-----> Was ");
+            //            Serial.print (tv.tv_sec);
+            //            Serial.print (" ");
+            //            Serial.print (tv.tv_usec);
             struct timeval tv_new;
             tv_new.tv_sec = json_recievedmessage["msg"]["stamp"]["secs"];
             tv_new.tv_usec = (int)json_recievedmessage["msg"]["stamp"]["nsecs"] / 1000;
             settimeofday(&tv_new, NULL);
-            Serial.print ("    Is ");
-            Serial.print (tv.tv_sec);
-            Serial.print (" ");
-            Serial.print (tv.tv_usec);
-            Serial.println("");
+            //            Serial.print ("    Is ");
+            //            Serial.print (tv.tv_sec);
+            //            Serial.print (" ");
+            //            Serial.print (tv.tv_usec);
+            //            Serial.println("");
           }
         }
       }
@@ -256,16 +258,16 @@ void TaskBlank(void *pvParameters)  // This is a task.
         double q3 = ((double)data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
         double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
 
-        Serial.print(F("Q1:"));
-        Serial.print(q1, 3);
-        Serial.print(F(" Q2:"));
-        Serial.print(q2, 3);
-        Serial.print(F(" Q3:"));
-        Serial.print(q3, 3);
-        Serial.print(F(" Q0:"));
-        Serial.print(q0, 3);
-        Serial.print(F(" Accuracy:"));
-        Serial.println(data.Quat9.Data.Accuracy);
+        //        Serial.print(F("Q1:"));
+        //        Serial.print(q1, 3);
+        //        Serial.print(F(" Q2:"));
+        //        Serial.print(q2, 3);
+        //        Serial.print(F(" Q3:"));
+        //        Serial.print(q3, 3);
+        //        Serial.print(F(" Q0:"));
+        //        Serial.print(q0, 3);
+        //        Serial.print(F(" Accuracy:"));
+        //        Serial.println(data.Quat9.Data.Accuracy);
         json_Publish_IMU["msg"]["orientation"]["x"] = q1;
         json_Publish_IMU["msg"]["orientation"]["y"] = q2;
         json_Publish_IMU["msg"]["orientation"]["z"] = q3;
@@ -282,15 +284,34 @@ void TaskBlank(void *pvParameters)  // This is a task.
         json_Publish_IMU["msg"]["linear_acceleration"]["y"] = acc_y; // m/s^2
         json_Publish_IMU["msg"]["linear_acceleration"]["z"] = acc_z;
 
-        Serial.print(F("Accel: X:"));
-        Serial.print(acc_x);
-        Serial.print(F(" Y:"));
-        Serial.print(acc_y);
-        Serial.print(F(" Z:"));
-        Serial.println(acc_z);
+        //Serial.print(F("Accel: X:"));
+        //        Serial.print(acc_x);
+        //        Serial.print(F(" Y:"));
+        //        Serial.print(acc_y);
+        //        Serial.print(F(" Z:"));
+        //        Serial.println(acc_z);
       }
+      //      if ((data.header & DMP_header_bitmap_Gyro_Calibr) > 0) // Check for callibrated Gyro data
+      //      {
+      //        //unsigned char gyroBiasX[4]; // Big-endian
+      //        //boolean success = (IMU.readDMPmems(GYRO_BIAS_X, 4, &gyroBiasX[0]) == ICM_20948_Stat_Ok);
+      //
+      //        float gyro_x = (float)data.Gyro_Calibr.Data.X;
+      //        float gyro_y = (float)data.Gyro_Calibr.Data.Y;
+      //        float gyro_z = (float)data.Gyro_Calibr.Data.Z;
+      //
+      //        Serial.print(F("gyroC: X:"));
+      //        Serial.print(gyro_x);
+      //        Serial.print(F(" Y:"));
+      //        Serial.print(gyro_y);
+      //        Serial.print(F(" Z:"));
+      //        Serial.println(gyro_z);
+      //      }
       if ((data.header & DMP_header_bitmap_Gyro) > 0) // Check for callibrated Gyro data
       {
+        //unsigned char gyroBiasX[4]; // Big-endian
+        //boolean success = (IMU.readDMPmems(GYRO_BIAS_X, 4, &gyroBiasX[0]) == ICM_20948_Stat_Ok);
+
         float gyro_x = (float)data.Raw_Gyro.Data.X;
         float gyro_y = (float)data.Raw_Gyro.Data.Y;
         float gyro_z = (float)data.Raw_Gyro.Data.Z;
@@ -308,10 +329,13 @@ void TaskBlank(void *pvParameters)  // This is a task.
         Serial.print(gyro_y);
         Serial.print(F(" Z:"));
         Serial.print(gyro_z);
+        Serial.print(F(" XB:"));
+        Serial.print(gyro_xb);
+        Serial.print(F(" YB:"));
+        Serial.print(gyro_yb);
         Serial.print(F(" ZB:"));
         Serial.println(gyro_zb);
-        Serial.println(IMU.temp());
-
+        //Serial.println(IMU.temp());
       }
     }
 
