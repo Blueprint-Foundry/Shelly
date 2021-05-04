@@ -32,9 +32,10 @@ WebSocketsClient webSocket; // this is a websocket client object
 
 // Subscribers and Publishers over Webscokets/Rosbridge/JSON
 char buffer[400];
-StaticJsonDocument<200> json_Subscribe_header_sent;
-StaticJsonDocument<200> json_recievedmessage;
+StaticJsonDocument<400> json_Subscribe_header_sent;
+StaticJsonDocument<400> json_recievedmessage;
 StaticJsonDocument<400> json_Publish_IMU;
+StaticJsonDocument<400> json_Publish_IMU_Temp;
 
 void TaskMotors( void *pvParameters );
 void TaskBlank( void *pvParameters );
@@ -134,9 +135,8 @@ void loop()
 /*--------------------------------------------------*/
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   char *payload_pointer = (char *)payload;
-  size_t len;
 
-  Serial.printf("Got Type %i\n", type);
+  //Serial.printf("Got Type %i\n", type);
 
   switch (type) {
     case WStype_ERROR: // type 0
@@ -153,19 +153,21 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
       {
         Serial.printf("[WSc] Connected to url: %s\n", IP);
         //Subscribe to stuff
-        len = serializeJson(json_Subscribe_header_sent, buffer);
-        webSocket.sendTXT(buffer, len);
+        webSocket.sendTXT(buffer, serializeJson(json_Subscribe_header_sent, buffer));
         //Advertise Publishers
-        len = serializeJson(json_Publish_IMU, buffer);
-        webSocket.sendTXT(buffer, len);
+        //len = serializeJson(json_Publish_IMU, buffer);
+        webSocket.sendTXT(buffer, serializeJson(json_Publish_IMU, buffer));
         json_Publish_IMU["op"] = "publish";
+        webSocket.sendTXT(buffer, serializeJson(json_Publish_IMU_Temp, buffer));
+        json_Publish_IMU_Temp["op"] = "publish";
 
         break;
       }
     case WStype_TEXT: // type 3
       {
-        size_t len = serializeJson(json_Publish_IMU, buffer);
-        webSocket.sendTXT(buffer, len);
+        webSocket.sendTXT(buffer, serializeJson(json_Publish_IMU, buffer)); //TODO: How to send outside of Websocket event??
+        webSocket.sendTXT(buffer, serializeJson(json_Publish_IMU_Temp, buffer));
+
         DeserializationError err = deserializeJson(json_recievedmessage, payload_pointer);
 
         if (err)
@@ -273,12 +275,20 @@ void TaskBlank(void *pvParameters)  // This is a task.
         json_Publish_IMU["msg"]["orientation"]["z"] = q3;
         json_Publish_IMU["msg"]["orientation"]["w"] = q0;
 
+        //We care most about our Quaternion orientation, so timestamp is taken closest to it
+        json_Publish_IMU["msg"]["header"]["stamp"]["secs"] = tv.tv_sec;
+        json_Publish_IMU["msg"]["header"]["stamp"]["nsecs"] = tv.tv_usec * 1000;
+
+        IMU.getAGMT();  // TODO: Need to move it somewhere more reasonable
+        json_Publish_IMU_Temp["msg"]["header"]["stamp"]["secs"] = tv.tv_sec;
+        json_Publish_IMU_Temp["msg"]["header"]["stamp"]["nsecs"] = tv.tv_usec * 1000;
+        json_Publish_IMU_Temp["msg"]["temperature"] = IMU.temp();
       }
       if ((data.header & DMP_header_bitmap_Accel) > 0) // Check for Accel
       {
         float acc_x = (float)data.Raw_Accel.Data.X / 107.1; // Extract the raw accelerometer data
         float acc_y = (float)data.Raw_Accel.Data.Y / 107.1;
-        float acc_z = (float)data.Raw_Accel.Data.Z / 107.1;
+        float acc_z = (float)data.Raw_Accel.Data.Z / 107.1; //TODO: Set correct scale?
 
         json_Publish_IMU["msg"]["linear_acceleration"]["x"] = acc_x;
         json_Publish_IMU["msg"]["linear_acceleration"]["y"] = acc_y; // m/s^2
@@ -313,37 +323,36 @@ void TaskBlank(void *pvParameters)  // This is a task.
         //boolean success = (IMU.readDMPmems(GYRO_BIAS_X, 4, &gyroBiasX[0]) == ICM_20948_Stat_Ok);
 
         float gyro_x = (float)data.Raw_Gyro.Data.X;
-        float gyro_y = (float)data.Raw_Gyro.Data.Y;
+        float gyro_y = (float)data.Raw_Gyro.Data.Y; //TODO: Set correct scale + get to rad/s
         float gyro_z = (float)data.Raw_Gyro.Data.Z;
         float gyro_xb = (float)data.Raw_Gyro.Data.BiasX;
         float gyro_yb = (float)data.Raw_Gyro.Data.BiasY;
         float gyro_zb = (float)data.Raw_Gyro.Data.BiasZ;
 
+        //Scale: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/blob/8341270a4a7d08e6b5df95a8c123f6c9378d7268/src/ICM_20948.cpp
+
         json_Publish_IMU["msg"]["angular_velocity"]["x"] = gyro_x;
         json_Publish_IMU["msg"]["angular_velocity"]["y"] = gyro_y; //rad/s
         json_Publish_IMU["msg"]["angular_velocity"]["z"] = gyro_z;
 
-        Serial.print(F("gyro: X:"));
-        Serial.print(gyro_x);
-        Serial.print(F(" Y:"));
-        Serial.print(gyro_y);
-        Serial.print(F(" Z:"));
-        Serial.print(gyro_z);
-        Serial.print(F(" XB:"));
-        Serial.print(gyro_xb);
-        Serial.print(F(" YB:"));
-        Serial.print(gyro_yb);
-        Serial.print(F(" ZB:"));
-        Serial.println(gyro_zb);
-        //Serial.println(IMU.temp());
+        //        Serial.print(F("gyro: X:"));
+        //        Serial.print(gyro_x);
+        //        Serial.print(F(" Y:"));
+        //        Serial.print(gyro_y);
+        //        Serial.print(F(" Z:"));
+        //        Serial.print(gyro_z);
+        //        Serial.print(F(" XB:"));
+        //        Serial.print(gyro_xb);
+        //        Serial.print(F(" YB:"));
+        //        Serial.print(gyro_yb);
+        //        Serial.print(F(" ZB:"));
+        //        Serial.println(gyro_zb);
       }
     }
 
     if (IMU.status != ICM_20948_Stat_FIFOMoreDataAvail) // If more data is available then we should read it right away - and not delay
     {
-      json_Publish_IMU["msg"]["header"]["stamp"]["secs"] = tv.tv_sec;
-      json_Publish_IMU["msg"]["header"]["stamp"]["nsecs"] = tv.tv_usec * 1000;
-      vTaskDelay(500 / portTICK_PERIOD_MS);
+      vTaskDelay(50 / portTICK_PERIOD_MS);
     }
   }
 }
@@ -365,4 +374,11 @@ void SetupJSON() {
   json_Publish_IMU["topic"] = "/Shelly/Imu";
   json_Publish_IMU["type"] = "sensor_msgs/Imu";
   json_Publish_IMU["msg"]["header"]["frame_id"] = "/Shelly/Imu";
+
+  //Publishes IMU Temperature data from Shelly to Laptop
+  json_Publish_IMU_Temp["op"] = "advertise";
+  json_Publish_IMU_Temp["id"] = "3";
+  json_Publish_IMU_Temp["topic"] = "/Shelly/Imu/Temperature";
+  json_Publish_IMU_Temp["type"] = "sensor_msgs/Temperature";
+  json_Publish_IMU_Temp["msg"]["header"]["frame_id"] = "/Shelly/Imu/Temp";
 }
