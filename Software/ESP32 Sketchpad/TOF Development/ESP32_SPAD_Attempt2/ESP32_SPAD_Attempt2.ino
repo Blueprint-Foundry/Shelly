@@ -6,7 +6,7 @@ VL53L1X sensor;
 
 int TOF_discovered_flag = 0; // set to 1 when the TOF address 0x29 is discovered 
 int initialize_once_flag = 0; // used so the TOF sensor is initialized once
-
+int success_flag = 0;
  
 void setup()
 {
@@ -77,14 +77,33 @@ void loop()
     if (!sensor.init())
     {
       Serial.println("Failed to detect and initialize sensor!");
-
+      success_flag = 0;
     }
     else
     {
       Serial.println("VL53L1X is initialized");
+
+      sensor.setDistanceMode(VL53L1X::Long);
+      sensor.setMeasurementTimingBudget(50000);
+      sensor.startContinuous(50);
+      success_flag = 1;  // allow for continuous reading
+      
     }
     initialize_once_flag = 1;
     
+  }
+
+  if(success_flag == 1)
+  {
+    Serial.print(sensor.read());
+    if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
+  
+    Serial.println();    
+  }
+  else
+  {
+    Serial.println("Failure :(");
+    delay(2000); 
   }
 
 }
