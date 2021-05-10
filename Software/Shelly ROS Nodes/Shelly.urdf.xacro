@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot name="shelly" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="footprint_vertical_offset" value="0.1" />
+
+  <link name="base_link"></link>
+  
+  <joint name="base_link_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="chassis_link" />
+  </joint>
+
+  <link name="chassis_link">
+    <visual>
+      <origin xyz="0 0 ${footprint_vertical_offset}" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="chassis_link" />
+    <child link="imu_link" />
+  </joint>
+
+</robot>

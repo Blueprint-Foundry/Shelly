@@ -31,6 +31,7 @@ WebSocketsClient webSocket; // this is a websocket client object
 #include "wifi_details.h"
 
 // Subscribers and Publishers over Webscokets/Rosbridge/JSON
+//Specifications: https://github.com/RobotWebTools/rosbridge_suite/blob/develop/ROSBRIDGE_PROTOCOL.md
 char buffer[400];
 StaticJsonDocument<400> json_Subscribe_header_sent;
 StaticJsonDocument<400> json_recievedmessage;
@@ -287,8 +288,13 @@ void TaskBlank(void *pvParameters)  // This is a task.
       if ((data.header & DMP_header_bitmap_Accel) > 0) // Check for Accel
       {
         float acc_x = (float)data.Raw_Accel.Data.X / 107.1; // Extract the raw accelerometer data
-        float acc_y = (float)data.Raw_Accel.Data.Y / 107.1;
-        float acc_z = (float)data.Raw_Accel.Data.Z / 107.1; //TODO: Set correct scale?
+        float acc_y = (float)data.Raw_Accel.Data.Y / 107.1; //Seems to use the 8.192 scaling??
+        float acc_z = (float)data.Raw_Accel.Data.Z / 107.1; //TODO: Set correct scale? 1g = 9.80665m/s^2
+
+        //Serial.print("Raw: ");
+        //Serial.println(acc_z);
+        //Serial.println(IMU.agmt.acc.axes.z);
+        //Serial.println(IMU.accZ());
 
         json_Publish_IMU["msg"]["linear_acceleration"]["x"] = acc_x;
         json_Publish_IMU["msg"]["linear_acceleration"]["y"] = acc_y; // m/s^2
@@ -322,17 +328,21 @@ void TaskBlank(void *pvParameters)  // This is a task.
         //unsigned char gyroBiasX[4]; // Big-endian
         //boolean success = (IMU.readDMPmems(GYRO_BIAS_X, 4, &gyroBiasX[0]) == ICM_20948_Stat_Ok);
 
-        float gyro_x = (float)data.Raw_Gyro.Data.X;
-        float gyro_y = (float)data.Raw_Gyro.Data.Y; //TODO: Set correct scale + get to rad/s
-        float gyro_z = (float)data.Raw_Gyro.Data.Z;
+        float gyro_x = (float)data.Raw_Gyro.Data.X / 16.4 * 0.0174533 ;
+        float gyro_y = (float)data.Raw_Gyro.Data.Y / 16.4 * 0.0174533;
+        float gyro_z = (float)data.Raw_Gyro.Data.Z / 16.4 * 0.0174533;
         float gyro_xb = (float)data.Raw_Gyro.Data.BiasX;
         float gyro_yb = (float)data.Raw_Gyro.Data.BiasY;
         float gyro_zb = (float)data.Raw_Gyro.Data.BiasZ;
 
+        //Serial.print("Raw: ");
+        //Serial.println(gyro_z);
+        //Serial.println(IMU.gyrZ());
+
         //Scale: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/blob/8341270a4a7d08e6b5df95a8c123f6c9378d7268/src/ICM_20948.cpp
 
         json_Publish_IMU["msg"]["angular_velocity"]["x"] = gyro_x;
-        json_Publish_IMU["msg"]["angular_velocity"]["y"] = gyro_y; //rad/s
+        json_Publish_IMU["msg"]["angular_velocity"]["y"] = gyro_y; //rad/s.  1 deg = 0.0174533 rad
         json_Publish_IMU["msg"]["angular_velocity"]["z"] = gyro_z;
 
         //        Serial.print(F("gyro: X:"));
