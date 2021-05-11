@@ -11,7 +11,7 @@ These must be installed to your environment
 * ESP32 Arduino Board Manager https://github.com/espressif/arduino-esp32/blob/master/docs/arduino-ide/boards_manager.md
 * Arduino Library https://github.com/bblanchon/ArduinoJson
 * Arduino Library https://github.com/Links2004/arduinoWebSockets
-* Arduino Library https://github.com/AwotG/Arduino-MAX17055_Driver
+* Arduino Library https://github.com/Blueprint-Foundry/Arduino-MAX17055_Driver
 * Arduino Library https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
 * Arduino Library https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
 * Arduino Library https://github.com/pololu/vl53l1x-st-api-arduino.git
