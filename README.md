@@ -14,7 +14,7 @@ These must be installed to your environment
 * Arduino Library https://github.com/Blueprint-Foundry/Arduino-MAX17055_Driver
 * Arduino Library https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library
 * Arduino Library https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library
-* Arduino Library https://github.com/pololu/vl53l1x-st-api-arduino.git
+* Arduino Library https://github.com/pololu/vl53l1x-arduino.git
 * Arduino Library https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary
 (note: ensure to enable DMP functionality. Edit ICM_20948_C.h and uncomment line 29: #define ICM_20948_USE_DMP
 
