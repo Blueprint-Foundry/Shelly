@@ -49,7 +49,6 @@ WebSocketsClient webSocket; // this is a websocket client object
 char buffer[400];
 StaticJsonDocument<400> json_Sub_header;
 StaticJsonDocument<400> json_Pub_TOF_A;
-StaticJsonDocument<400> json_Pub_TOF_PointField;
 StaticJsonDocument<400> json_recievedmessage;
 struct timeval tv; //handles setting and getting time
 
@@ -261,8 +260,8 @@ void loop()
     if (sensor.dataReady())
     {
       distance_in_mm = sensor.read(false);
-      Serial.printf("distance is: %d \n", distance_in_mm );
-
+      //Serial.printf("distance is: %d \n", distance_in_mm );
+      json_Pub_TOF_A["msg"]["data"]="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,0.1,0.1,0.1,0.1,0.1,0.1";
     }
     else
     {
@@ -298,15 +297,5 @@ void SetupJSON()
   json_Pub_TOF_A["op"] = "advertise";
   json_Pub_TOF_A["id"] = "2";
   json_Pub_TOF_A["topic"] = "/Shelly/TOF_A";
-  json_Pub_TOF_A["type"] = "sensor_msgs/PointCloud2";
-  json_Pub_TOF_A["msg"]["header"]["frame_id"] = "/Shelly/TOF_A";
-  json_Pub_TOF_A["msg"]["height"] = 4;
-  json_Pub_TOF_A["msg"]["width"] = 4;
-  json_Pub_TOF_A["msg"]["is_dense"] = true;
-  json_Pub_TOF_PointField["type"] = "sensor_msgs/PointField";
-  json_Pub_TOF_PointField["msg"]["name"]= "depth_in_mm";
-  json_Pub_TOF_PointField["msg"]["offset"]= 0;
-  json_Pub_TOF_PointField["msg"]["datatype"]= 4;
-  json_Pub_TOF_PointField["msg"]["count"]= 1;
-  json_Pub_TOF_A["msg"]["fields"] = json_Pub_TOF_PointField;
+  json_Pub_TOF_A["type"] = "std_msgs/String";
 }
