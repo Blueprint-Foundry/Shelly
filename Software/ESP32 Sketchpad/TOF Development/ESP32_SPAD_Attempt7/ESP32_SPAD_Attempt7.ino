@@ -43,21 +43,21 @@ int success_flag = 0;
 uint8_t ROI_width;
 uint8_t  ROI_height;
 uint8_t  ROI_center;
-uint16_t distance_in_mm = 0;
+float distance_in_mm = 0;
 
 WebSocketsClient webSocket; // this is a websocket client object
-char buffer[400];
-StaticJsonDocument<400> json_Sub_header;
-StaticJsonDocument<400> json_Pub_TOF_A;
-StaticJsonDocument<400> json_recievedmessage;
+char buffer[800];
+StaticJsonDocument<800> json_Sub_header;
+StaticJsonDocument<800> json_Pub_TOF_A;
+StaticJsonDocument<800> json_recievedmessage;
 struct timeval tv; //handles setting and getting time
 
 String tx_array_string = "";
 String nextdata_string = "";
 
-char topright_spad_centers[16] = {27, 14, 42, 46, 74, 78, 106, 110, 145, 149, 177, 181, 209, 213, 241, 245};
+uint8_t topright_spad_centers[16] = {27, 14, 42, 46, 74, 78, 106, 110, 145, 149, 177, 181, 209, 213, 241, 245};
 
-char spad_center_index = 0;
+uint8_t spad_center_index = 0;
 
 void setup()
 {
@@ -215,9 +215,9 @@ void loop()
     {
       
 
-      distance_in_mm = sensor.read(false);  
+      distance_in_mm = sensor.read(false)/1000.0;  
          
-      Serial.printf("spad_index: %d, spad center: %d, distance is: %d \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
+      Serial.printf("spad_index: %d, spad center: %d, distance is: %f \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
 
       nextdata_string = String(distance_in_mm);
       tx_array_string += String(distance_in_mm);
@@ -248,12 +248,13 @@ void loop()
       Serial.printf("transmitting following data string \n");
   
       Serial.println(tx_array_string);
-      
-      //Serial.printf(tx_array_string);
 
 
       json_Pub_TOF_A["msg"]["data"]= tx_array_string;
-      //json_Pub_TOF_A["msg"]["data"]="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,0.1,0.1,0.1,0.1,0.1,0.1";
+      //String val = "1000,2000,3000,4000,5000,6000,7000,8000,9000,1000,11000,12000,13000,14000,15000,16000";
+      //json_Pub_TOF_A["msg"]["data"]= val;
+      webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer));
+      //json_Pub_TOF_A["msg"]["data"]="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
   
       tx_array_string = "";
       nextdata_string = "";
@@ -306,7 +307,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
       }
     case WStype_TEXT: // type 3
       {
-        webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer)); //TODO: How to send outside of Websocket event??
+        //webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer)); //TODO: How to send outside of Websocket event??
 
         DeserializationError err = deserializeJson(json_recievedmessage, payload_pointer);
 
