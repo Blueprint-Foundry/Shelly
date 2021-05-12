@@ -52,6 +52,13 @@ StaticJsonDocument<400> json_Pub_TOF_A;
 StaticJsonDocument<400> json_recievedmessage;
 struct timeval tv; //handles setting and getting time
 
+String tx_array_string = "";
+String nextdata_string = "";
+
+char topright_spad_centers[16] = {27, 14, 42, 46, 74, 78, 106, 110, 145, 149, 177, 181, 209, 213, 241, 245};
+
+char spad_center_index = 0;
+
 void setup()
 {
 
@@ -175,7 +182,100 @@ void setup()
   webSocket.onEvent(webSocketEvent); // if a request happens to the server, trigger this function
   webSocket.setReconnectInterval(1000);
 
+
 }
+
+
+void loop()
+{
+
+
+
+
+  webSocket.loop();
+
+
+  if(spad_center_index == 16)
+  {
+    spad_center_index = 0;
+  }
+  
+  if (success_flag == 1)
+  {
+
+
+    sensor.readSingle(false);  // start single measurement
+
+    delay(200);
+
+    sensor.setROISize(4, 4);
+    sensor.setROICenter(topright_spad_centers[spad_center_index]);  
+
+    if (sensor.dataReady())
+    {
+      
+
+      distance_in_mm = sensor.read(false);  
+         
+      Serial.printf("spad_index: %d, spad center: %d, distance is: %d \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
+
+      nextdata_string = String(distance_in_mm);
+      tx_array_string += String(distance_in_mm);
+
+      if(spad_center_index != 15)
+      {
+        tx_array_string += String(",");
+      }
+
+
+
+      
+    }
+    else
+    {
+      Serial.printf("data wasn't ready \n");
+      if (sensor.timeoutOccurred())
+      {
+        Serial.printf(" TIMEOUT \n");
+      }
+    }
+    
+
+    if(spad_center_index >= 15)
+    {
+      spad_center_index = 0;
+  
+      Serial.printf("transmitting following data string \n");
+  
+      Serial.println(tx_array_string);
+      
+      //Serial.printf(tx_array_string);
+
+
+      json_Pub_TOF_A["msg"]["data"]= tx_array_string;
+      //json_Pub_TOF_A["msg"]["data"]="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,0.1,0.1,0.1,0.1,0.1,0.1";
+  
+      tx_array_string = "";
+      nextdata_string = "";
+    }
+    else
+    {
+      spad_center_index++; 
+      
+    } 
+
+   
+
+  }
+  else
+  {
+    Serial.println("Failure :(");
+    delay(2000);
+  }
+
+}
+
+
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   char *payload_pointer = (char *)payload;
@@ -245,42 +345,6 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   }
 
 }
-
-void loop()
-{
-
-  webSocket.loop();
-  if (success_flag == 1)
-  {
-
-    sensor.readSingle(false);  // start single measurement
-
-    delay(100);
-
-    if (sensor.dataReady())
-    {
-      distance_in_mm = sensor.read(false);
-      //Serial.printf("distance is: %d \n", distance_in_mm );
-      json_Pub_TOF_A["msg"]["data"]="0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,0.1,0.1,0.1,0.1,0.1,0.1";
-    }
-    else
-    {
-      Serial.printf("data wasn't ready \n");
-      if (sensor.timeoutOccurred())
-      {
-        Serial.printf(" TIMEOUT \n");
-      }
-    }
-
-  }
-  else
-  {
-    Serial.println("Failure :(");
-    delay(2000);
-  }
-
-}
-
 
 void SetupJSON()
 {
