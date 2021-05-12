@@ -37,4 +37,4 @@ jobs:
             - source-url: https://github.com/Blueprint-Foundry/PI4IOE5V96248_Arduino_Library.git
             - source-url: https://github.com/Blueprint-Foundry/EAAPMST3923A2_Arduino_Library.git
             - source-url: https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary.git
-            - source-url: https://github.com/pololu/vl53l1x-st-api-arduino.git
+            - source-url: https://github.com/pololu/vl53l1x-arduino.git
