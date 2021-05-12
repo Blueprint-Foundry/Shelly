@@ -15,6 +15,7 @@
 #include <WebServer.h>
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
+#include <time.h> //TODO: Time is not being kept without a constant header stream... Hmm...
 
 WebSocketsClient webSocket; // this is a websocket client object
 
@@ -204,6 +205,13 @@ void TaskMotors(void *pvParameters)  // This is a task.
   {
     // Pause the task again for 50ms
     vTaskDelay(500 / portTICK_PERIOD_MS);
+    struct tm timeinfo;
+    if (!getLocalTime(&timeinfo)) {
+      Serial.println("Failed to obtain time");
+    }
+    else {
+      Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    }
     //io_exp.writePort(0, 0xFF);
     //vTaskDelay(50 / portTICK_PERIOD_MS);
     //io_exp.writePort(0, 0xF7);
