@@ -1,0 +1,55 @@
+Designator Footprint               Mid X         Mid Y         Ref X         Ref Y         Pad X         Pad Y TB      Rotation Comment        
+
+J4         PCB-wzxd1d1storh51uhdjer-1       1690mil        900mil       1890mil        900mil       1890mil        900mil  T        180.00 Adam Tech PH1-05-UA
+BT1        PCB-dcvolpgrba2jg6082t1m-1  -1319.999mil  -2934.999mil    1388.82mil        460mil  -1319.999mil  -2934.999mil  T        270.00 Battery        
+K1         USB_2.0_Micro_B   2597.165mil   1226.378mil   2597.165mil   1173.228mil   2648.347mil   1173.228mil  T        180.00 10118194-0001LF
+SW1        PCB-jzft20c5ocof3hhi9mdb-1       2125mil       1235mil       2125mil       1235mil       2045mil       1235mil  T        360.00 C&K Components OS102011MS2QN1
+J3         PCB-bsh9r0gwm5mguym5kta5-1    2448.82mil        450mil    2598.82mil        450mil    2598.82mil        450mil  T        270.00 Keystone 54    
+J6         PCB-bsh9r0gwm5mguym5kta5-1     328.82mil        450mil     178.82mil        450mil     178.82mil        450mil  T         90.00 Keystone 54    
+C1         PCB-4kws2ejwr5jtmehi4fny-1        970mil        885mil        970mil        885mil    943.425mil        885mil  T        360.00 Samsung CL10A475MQ8NNNC
+C2         PCB-4kws2ejwr5jtmehi4fny-1        830mil        975mil        830mil        975mil        830mil   1001.575mil  T        270.00 Samsung CL10A475MQ8NNNC
+C3         PCB-4kws2ejwr5jtmehi4fny-1    2419.99mil    1057.99mil    2419.99mil    1057.99mil   2446.565mil    1057.99mil  T        180.00 Samsung CL10A475MQ8NNNC
+C4         PCB-4kws2ejwr5jtmehi4fny-1    2319.99mil     872.99mil    2319.99mil     872.99mil   2293.416mil     872.99mil  T        360.00 Samsung CL10A475MQ8NNNC
+C5         PCB-4kws2ejwr5jtmehi4fny-1    2429.99mil     872.99mil    2429.99mil     872.99mil   2456.565mil     872.99mil  T        180.00 Samsung CL10A475MQ8NNNC
+C6         CAPC1005X56X25NL10T15    2279.99mil     942.99mil    2279.99mil     942.99mil    2279.99mil    925.668mil  T         90.00 Samsung CL05A104KA5NNNC
+C7         CAPC2013X145X50ML20T25       1130mil        725mil       1130mil        725mil   1089.567mil        725mil  T          0.00 Samsung Electro-Mechanics CL21A226MOCLRNC
+C8         CAPC2013X145X50ML20T25       1360mil        535mil       1360mil        535mil   1400.433mil        535mil  T        180.00 Samsung Electro-Mechanics CL21A226MOCLRNC
+C9         CAPC2013X145X50ML20T25       1360mil        445mil       1360mil        445mil   1400.433mil        445mil  T        180.00 Samsung Electro-Mechanics CL21A226MOCLRNC
+C10        PCB-4kws2ejwr5jtmehi4fny-1       1150mil        645mil       1150mil        645mil   1123.425mil        645mil  T        360.00 Samsung CL10A475MQ8NNNC
+C11        CAPC1005X56X25NL10T15        555mil        755mil        555mil        755mil    537.677mil        755mil  T        360.00 Samsung CL05A104KA5NNNC
+C12        CAPC1005X56X25NL10T15        555mil        795mil        555mil        795mil    537.677mil        795mil  T        360.00 Samsung CL05Y474KP5VPNC
+D1         PCB-twamu1ir1wsedc9i4dl3-1        480mil       1260mil        480mil       1260mil        480mil   1289.528mil  T         90.00 LTST-C190TBKT  
+D2         PCB-7pqrnuuu773yd03abas4-1        550mil       1260mil        550mil       1260mil        550mil   1289.528mil  T        270.00 Lite-On LTST-C190EKT
+D3         DSMD0603GRID25PAD90        620mil       1260mil        620mil       1260mil        620mil   1230.472mil  T         90.00 Lite-On LTST-C190GKT
+J1         PCB-uejn4jclq1aez1d9l72z-1   1701.575mil       1260mil       1800mil       1260mil       1800mil       1260mil  T        180.00 CUI TB003-500-P02BE
+J2         PCB-uejn4jclq1aez1d9l72z-1   1301.575mil       1260mil       1400mil       1260mil       1400mil       1260mil  T        180.00 CUI TB003-500-P02BE
+J5         PCB-uejn4jclq1aez1d9l72z-1    901.575mil       1260mil       1000mil       1260mil       1000mil       1260mil  T        180.00 CUI TB003-500-P02BE
+L1         PCB-ju97yutp2azoh42t42cd-1       1270mil        885mil       1270mil        885mil   1194.134mil        885mil  T          0.00 Bourns SRN5040TA-1R5M
+Q1         SOT-23-TT3_L           630mil        660mil        630mil        660mil    665.433mil    622.598mil  T        180.00 MMBT3906-7-F   
+Q2         DPAK               295.276mil     881.89mil    251.969mil     881.89mil     421.26mil    792.126mil  T        180.00 MCU80N03A-TP   
+R1         RES0603-IB            2630mil        990mil       2630mil        990mil   2657.559mil        990mil  T        180.00 Stackpole Electronics RMCF0603ZT0R00
+R2         PCB-xfncg8r2z74zylg35qj5-1       2040mil        800mil       2040mil        800mil   2059.685mil        800mil  T        180.00 Stackpole Electronics RMCF0402FT3K90
+R3         RES0603-IB             550mil       1140mil        550mil       1140mil        550mil   1167.559mil  T        270.00 Stackpole Electronics RMCF0603JT680R
+R5         PCB-xfncg8r2z74zylg35qj5-1       2060mil        960mil       2060mil        960mil   2040.315mil        960mil  T        360.00 Stackpole Electronics RMCF0402FT511R
+R6         RES0603-IB             480mil       1140mil        480mil       1140mil        480mil   1112.441mil  T         90.00 Stackpole Electronics RMCF0603JT680R
+R7         RES0603-IB            2630mil        930mil       2630mil        930mil   2657.559mil        930mil  T        180.00 Stackpole Electronics RMCF0603ZT0R00
+R8         RES0603-IB             620mil       1140mil        620mil       1140mil        620mil   1167.559mil  T        270.00 Stackpole Electronics RMCF0603JT680R
+R9         RES0603-IB             110mil       1070mil        110mil       1070mil    137.559mil       1070mil  T        180.00 Stackpole Electronics RMCF0603FT2K00
+R10        PCB-xfncg8r2z74zylg35qj5-1       2120mil        800mil       2120mil        800mil   2139.685mil        800mil  T        180.00 Stackpole Electronics RMCF0402FT2K55
+R12        PCB-xfncg8r2z74zylg35qj5-1    2259.99mil    1002.99mil    2259.99mil    1002.99mil   2240.305mil    1002.99mil  T        360.00 Stackpole Electronics RMCF0402FT22K1
+R14        PCB-xfncg8r2z74zylg35qj5-1       1240mil        425mil       1240mil        425mil   1220.315mil        425mil  T        360.00 Stackpole Electronics RMCF0402FT2K00
+R15        RES0603-IB            1250mil        515mil       1250mil        515mil       1250mil    486.441mil  T         90.00 Stackpole Electronics RMCF0603FT215R
+R16        RMCF0402               645mil        560mil        645mil        560mil    625.315mil        560mil  T        360.00 Stackpole Electronics RMCF0402JT10K0
+R17        RMCF0402               500mil        845mil        500mil        845mil        500mil    864.685mil  T        270.00 Stackpole Electronics RMCF0402JT10K0
+R18        RL1632T4F-R010-FNH        675mil     916.89mil        675mil     956.26mil    709.449mil     956.26mil  T        180.00 Cyntec RL1632T4F-R010-FNH
+U1         TPS2121RUXR        2369.99mil     962.99mil    2369.99mil     962.99mil   2356.211mil    936.416mil  T         90.00 TPS2121RUXR    
+U3         PCB-bv2xou8chv05bazlg8ay-1        950mil        985mil        950mil        985mil    902.756mil   1022.402mil  T          0.00 MCP73831T-2DCI/OT
+U4         PCB-v9ew7wuep8ssprsgjj6t-1        675mil     786.26mil        675mil     786.26mil    723.835mil    754.764mil  T        180.00 MAX17055ETB+T  
+U5         PCB-vikq55t1s2bdkemw8qqb-1   1295.001mil        680mil   1295.001mil        680mil   1256.615mil    623.819mil  T          0.00 RT4812GJ8F     
+U2         WSON_DSG_8            2100mil        880mil       2100mil        880mil   2070.472mil    842.598mil  T         90.00 Texas Instruments TPS259571DSGR
+R4         PCB-xfncg8r2z74zylg35qj5-1    2284.99mil    1042.99mil    2284.99mil    1042.99mil   2265.305mil    1042.99mil  T        360.00 Stackpole Electronics RMCF0402FT22K1
+R13        PCB-xfncg8r2z74zylg35qj5-1    2224.99mil    1062.99mil    2224.99mil    1062.99mil    2224.99mil   1082.675mil  T        270.00 Stackpole Electronics RMCF0402FT33K0
+C13        CAPC1005X56X25NL10T15       2180mil        820mil       2180mil        820mil       2180mil    802.677mil  T         90.00 Samsung CL05Y474KP5VPNC
+R11        PCB-xfncg8r2z74zylg35qj5-1        320mil       1070mil        320mil       1070mil    339.685mil       1070mil  T        180.00 Stackpole Electronics RMCF0402FT511R
+SW2        PCB-jzft20c5ocof3hhi9mdb-1        225mil       1220mil        225mil       1220mil        305mil       1220mil  T        180.00 C&K Components OS102011MS2QN1
+

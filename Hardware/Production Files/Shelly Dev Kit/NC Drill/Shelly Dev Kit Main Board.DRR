@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: Shelly Dev Kit Main Board.CMPcbDoc   5/12/2021  10:19:25 AM
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : Shelly Dev Kit Main Board-RoundHoles.TXT
+ASCII SlotHoles File : Shelly Dev Kit Main Board-SlotHoles.TXT
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        12mil (0.3048mm)         Round          158              27.05 Inch (687.02 mm)
+T2        19.68mil (0.49987mm)     Slot           2                288.73 Inch (7333.70 mm)
+T3        21.65mil (0.54991mm)     Slot           2                288.60 Inch (7330.48 mm)
+T4        35.43mil (0.89992mm)     Round          5                0.40 Inch (10.05 mm)
+T5        39.37mil (1mm)           Round          5                0.40 Inch (10.16 mm)
+T6        40mil (1.016mm)          Round          10               2.20 Inch (55.99 mm)
+---------------------------------------------------------------------------
+Totals                                            182              607.38 Inch (15427.40 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:00
