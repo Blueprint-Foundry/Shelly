@@ -195,11 +195,11 @@ void loop()
   webSocket.loop();
 
 
-  if(spad_center_index == 16)
+  if (spad_center_index == 16)
   {
     spad_center_index = 0;
   }
-  
+
   if (success_flag == 1)
   {
 
@@ -209,27 +209,27 @@ void loop()
     delay(200);
 
     sensor.setROISize(4, 4);
-    sensor.setROICenter(topright_spad_centers[spad_center_index]);  
+    sensor.setROICenter(topright_spad_centers[spad_center_index]);
 
     if (sensor.dataReady())
     {
-      
 
-      distance_in_mm = sensor.read(false)/1000.0;  
-         
+
+      distance_in_mm = sensor.read(false) / 1000.0;
+
       Serial.printf("spad_index: %d, spad center: %d, distance is: %f \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
 
       nextdata_string = String(distance_in_mm);
       tx_array_string += String(distance_in_mm);
 
-      if(spad_center_index != 15)
+      if (spad_center_index != 15)
       {
         tx_array_string += String(",");
       }
 
 
 
-      
+
     }
     else
     {
@@ -239,33 +239,34 @@ void loop()
         Serial.printf(" TIMEOUT \n");
       }
     }
-    
 
-    if(spad_center_index >= 15)
+
+    if (spad_center_index >= 15)
     {
       spad_center_index = 0;
-  
+
       Serial.printf("transmitting following data string \n");
-  
+
       Serial.println(tx_array_string);
 
-
-      json_Pub_TOF_A["msg"]["data"]= tx_array_string;
+      json_Pub_TOF_A["msg"]["data"] = "0";
+      json_Pub_TOF_A["msg"]["data"] = tx_array_string;
+      serializeJsonPretty(json_Pub_TOF_A, Serial);
       //String val = "1000,2000,3000,4000,5000,6000,7000,8000,9000,1000,11000,12000,13000,14000,15000,16000";
       //json_Pub_TOF_A["msg"]["data"]= val;
       webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer));
       //json_Pub_TOF_A["msg"]["data"]="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
-  
+
       tx_array_string = "";
       nextdata_string = "";
     }
     else
     {
-      spad_center_index++; 
-      
-    } 
+      spad_center_index++;
 
-   
+    }
+
+
 
   }
   else
