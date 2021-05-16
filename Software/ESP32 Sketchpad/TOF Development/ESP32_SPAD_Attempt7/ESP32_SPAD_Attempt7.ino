@@ -33,8 +33,7 @@ VL53L1X sensor;
 */
 #include "wifi_details.h"
 
-#define MEASUREMENT_BUDGET_MS 50
-#define INTER_MEASUREMENT_PERIOD_MS 55
+#define MEASUREMENT_BUDGET_MS 15000
 
 int TOF_discovered_flag = 0; // set to 1 when the TOF address 0x29 is discovered
 int initialize_once_flag = 0; // used so the TOF sensor is initialized once
@@ -47,9 +46,6 @@ float distance_in_mm = 0;
 
 WebSocketsClient webSocket; // this is a websocket client object
 char buffer[800];
-StaticJsonDocument<800> json_Sub_header;
-StaticJsonDocument<800> json_Pub_TOF_A;
-StaticJsonDocument<800> json_recievedmessage;
 struct timeval tv; //handles setting and getting time
 
 String tx_array_string = "";
@@ -129,7 +125,7 @@ void setup()
     {
       Serial.println("VL53L1X is initialized");
 
-      sensor.setDistanceMode(VL53L1X::Long);
+      sensor.setDistanceMode(VL53L1X::Medium);
 
       // ********
       // set ROIs
@@ -152,8 +148,8 @@ void setup()
       // ********
       // set timing budget and inter-measurement period
       // ********
-      sensor.setMeasurementTimingBudget(MEASUREMENT_BUDGET_MS * 1000); // in microseconds, but define constant is in milliseconds, so multiply by 1000
-      sensor.startContinuous(MEASUREMENT_BUDGET_MS + 5);  // intermeasurement period must be timing budget + 4ms at minimum
+      sensor.setMeasurementTimingBudget(MEASUREMENT_BUDGET_MS);
+      sensor.startContinuous(MEASUREMENT_BUDGET_MS + 4000);  // intermeasurement period must be timing budget + 4ms at minimum
       success_flag = 1;  // allow for continuous reading
 
     }
@@ -162,9 +158,8 @@ void setup()
   }
 
   // **********
-  // wifi connections and json management
+  // wifi connection
   // **********
-  SetupJSON();
 
   WiFi.begin(HOME_SSID, PWD);
 
@@ -206,39 +201,32 @@ void loop()
 
     sensor.readSingle(false);  // start single measurement
 
-    delay(200);
+    while (!sensor.dataReady()) {
+      //wait for sensor data
+    }
 
     sensor.setROISize(4, 4);
     sensor.setROICenter(topright_spad_centers[spad_center_index]);
 
-    if (sensor.dataReady())
+
+    distance_in_mm = sensor.read(false) / 1000.0;
+
+    //Serial.printf("spad_index: %d, spad center: %d, distance is: %f \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
+
+    nextdata_string = String(distance_in_mm);
+    tx_array_string += String(distance_in_mm);
+
+    if (spad_center_index != 15)
     {
-
-
-      distance_in_mm = sensor.read(false) / 1000.0;
-
-      Serial.printf("spad_index: %d, spad center: %d, distance is: %f \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
-
-      nextdata_string = String(distance_in_mm);
-      tx_array_string += String(distance_in_mm);
-
-      if (spad_center_index != 15)
-      {
-        tx_array_string += String(",");
-      }
-
-
-
-
+      tx_array_string += String(",");
     }
-    else
+
+
+    if (sensor.timeoutOccurred())
     {
-      Serial.printf("data wasn't ready \n");
-      if (sensor.timeoutOccurred())
-      {
-        Serial.printf(" TIMEOUT \n");
-      }
+      Serial.printf(" TIMEOUT \n");
     }
+
 
 
     if (spad_center_index >= 15)
@@ -246,14 +234,19 @@ void loop()
       spad_center_index = 0;
 
       Serial.printf("transmitting following data string \n");
-
       Serial.println(tx_array_string);
 
-      json_Pub_TOF_A["msg"]["data"] = "0";
-      json_Pub_TOF_A["msg"]["data"] = tx_array_string;
-      serializeJsonPretty(json_Pub_TOF_A, Serial);
+      //json_Pub_TOF_A["msg"]["data"] = "0";
+      //json_Pub_TOF_A["msg"]["data"] = tx_array_string;
+      //serializeJsonPretty(json_Pub_TOF_A, Serial);
       //String val = "1000,2000,3000,4000,5000,6000,7000,8000,9000,1000,11000,12000,13000,14000,15000,16000";
       //json_Pub_TOF_A["msg"]["data"]= val;
+      StaticJsonDocument<800> json_Pub_TOF_A;
+      json_Pub_TOF_A["op"] = "publish";
+      json_Pub_TOF_A["id"] = "2";
+      json_Pub_TOF_A["topic"] = "/Shelly/TOF_A";
+      json_Pub_TOF_A["type"] = "std_msgs/String";
+      json_Pub_TOF_A["msg"]["data"] = tx_array_string;
       webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer));
       //json_Pub_TOF_A["msg"]["data"]="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
 
@@ -298,18 +291,33 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
     case WStype_CONNECTED: // type 2
       {
         Serial.printf("[WSc] Connected to url: %s\n", IP);
+
+        //SUBSCRIBERS
+        // Receives Header from ROS on laptop, used to set time and check connection
+        StaticJsonDocument<800> json_Sub_header;
+        json_Sub_header["op"] = "subscribe";
+        json_Sub_header["id"] = "1";
+        json_Sub_header["topic"] = "/Shelly/header_sent";
+        json_Sub_header["type"] = "std_msgs/Header";
+
+        //PUBLISHERS
+        //Publishes TOF data from Shelly to Laptop
+        StaticJsonDocument<800> json_Pub_TOF_A;
+        json_Pub_TOF_A["op"] = "advertise";
+        json_Pub_TOF_A["id"] = "2";
+        json_Pub_TOF_A["topic"] = "/Shelly/TOF_A";
+        json_Pub_TOF_A["type"] = "std_msgs/String";
+
         //Subscribe to stuff
         webSocket.sendTXT(buffer, serializeJson(json_Sub_header, buffer));
         //Advertise Publishers
         webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer));
-        json_Pub_TOF_A["op"] = "publish";
 
         break;
       }
     case WStype_TEXT: // type 3
       {
-        //webSocket.sendTXT(buffer, serializeJson(json_Pub_TOF_A, buffer)); //TODO: How to send outside of Websocket event??
-
+        StaticJsonDocument<800> json_recievedmessage;
         DeserializationError err = deserializeJson(json_recievedmessage, payload_pointer);
 
         if (err)
@@ -346,22 +354,4 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
       break;
   }
 
-}
-
-void SetupJSON()
-{
-
-  //SUBSCRIBERS
-  // Receives Header from ROS on laptop, used to set time and check connection
-  json_Sub_header["op"] = "subscribe";
-  json_Sub_header["id"] = "1";
-  json_Sub_header["topic"] = "/Shelly/header_sent";
-  json_Sub_header["type"] = "std_msgs/Header";
-
-  //PUBLISHERS
-  //Publishes IMU data from Shelly to Laptop
-  json_Pub_TOF_A["op"] = "advertise";
-  json_Pub_TOF_A["id"] = "2";
-  json_Pub_TOF_A["topic"] = "/Shelly/TOF_A";
-  json_Pub_TOF_A["type"] = "std_msgs/String";
 }
