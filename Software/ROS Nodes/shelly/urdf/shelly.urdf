@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<robot name="shelly">
+
+  <material name="dark_grey">
+    <color rgba="0.1 0.1 0.1 1"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.12"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="imu">
+    <visual>
+      <geometry>
+        <box size="0.005 0.005 0.001"/>
+      </geometry>
+      <material name="dark_grey"/>
+    </visual>
+  </link>
+
+  <joint name="imu_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu"/>
+    <origin xyz="0 0 0.005"/>
+  </joint>
+
+</robot>
