@@ -1,7 +1,7 @@
 <launch>
 
-  <arg name="model" default="$(find shelly)/urdf/shelly.urdf"/>
-  <arg name="rvizconfig" default="$(find shelly)/scripts/shelly.rviz" />
+  <arg name="model" default="$(find shelly_description)/urdf/shelly.urdf"/>
+  <arg name="rvizconfig" default="$(find shelly_description)/scripts/shelly.rviz" />
 
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
 
