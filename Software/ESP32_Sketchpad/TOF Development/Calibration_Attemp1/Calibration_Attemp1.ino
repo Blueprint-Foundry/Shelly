@@ -38,7 +38,7 @@ VL53L1X sensor;
 //#include "wifi_details.h"
 
 #define MEASUREMENT_BUDGET_MS 15000
-#define EEPROM_SIZE 17
+#define EEPROM_SIZE 34
 
 
 int TOF_discovered_flag = 0; // set to 1 when the TOF address 0x29 is discovered
@@ -57,7 +57,10 @@ char buffer[800];
 String tx_array_string = "";
 String nextdata_string = "";
 
-uint8_t topright_spad_centers[16] = {27, 14, 42, 46, 74, 78, 106, 110, 145, 149, 177, 181, 209, 213, 241, 245};
+uint8_t topright_spad_centers[16] = {10, 14, 42, 46, 74, 78, 106, 110, 145, 149, 177, 181, 209, 213, 241, 245};
+
+uint8_t left2right_top2down_spad_centers[16] = {145, 177, 209, 241, 149, 181, 213, 245, 110, 78, 46, 14, 106, 74, 42, 10};
+uint16_t left2right_top2down_spad_distances[16];
 
 uint8_t spad_center_index = 0;
 
@@ -220,6 +223,9 @@ void setup()
   Serial.printf("read_spad_data: %d \n",read_spad_data);
 
 
+  calibrate_allspads();
+  success_flag = 0;
+
 }
 
 
@@ -232,14 +238,10 @@ void loop()
   //webSocket.loop();
 
 
-  if (spad_center_index == 16)
-  {
-    spad_center_index = 0;
-  }
+
 
   if (success_flag == 1)
   {
-
 
     sensor.readSingle(false);  // start single measurement
 
@@ -309,6 +311,101 @@ void loop()
     Serial.println("Failure :(");
     delay(2000);
   }
+
+}
+
+
+void calibrate_allspads()
+{
+   //int total_iterations = 16*50;
+   //int i1 = 0;
+   //int i2 = 0;
+
+   
+   //int spad_center_counter = 0;
+
+   float spad_avg[16]; 
+   float spad_current_data[16];   
+   float spad_avg_old[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; 
+   int num_of_elements = 1;
+
+/*
+   float spad145_avg = 0;
+   float spad177_avg = 0;
+   float spad209_avg = 0;
+   float spad241_avg = 0;   
+   float spad149_avg = 0;     
+   float spad181_avg = 0;
+   float spad213_avg = 0;
+   float spad245_avg = 0;
+   float spad110_avg = 0;     
+   float spad78_avg = 0;    
+   float spad46_avg = 0;   
+   float spad14_avg = 0;       
+   float spad106_avg = 0;     
+   float spad74_avg = 0;  
+   float spad42_avg = 0;    
+   float spad10_avg = 0;    
+   */    
+   
+   
+
+    sensor.readSingle(false);  // start single measurement
+
+    while (!sensor.dataReady()) {
+      //wait for sensor data
+    }
+
+    sensor.setROISize(4, 4);
+
+
+   for(int i1 = 0; i1 < 50; i1++)  // take 50 samples of each SPAD to find the average reading of each SPAD
+   {
+      Serial.printf("sample: %d \n",i1);  
+      for(int i2 = 0; i2 < 16; i2++ )  // for each of the 16 SPADS SPAD
+      {
+
+         sensor.setROISize(4, 4);
+         sensor.setROICenter(left2right_top2down_spad_centers[i2]);  // uint8_t left2right_top2down_spad_centers[16] = {145, 177, 209, 241, 149, 181, 213, 245, 110, 78, 46, 14, 106, 74, 42, 10};
+                 
+         // get the reading for that SPAD
+          sensor.readSingle(false);  // start single measurement
+      
+          while (!sensor.dataReady()) {
+            //wait for sensor data
+          }
+
+         spad_current_data[i2] = (float)(sensor.read(false) / 1000.0);  
+
+         // New average = old average * (n-1)/n + new value /n
+         spad_avg[i2] = spad_avg_old[i2]*((float)num_of_elements - 1)/(float)num_of_elements + spad_current_data[i2]/(float)num_of_elements;
+
+         spad_avg_old[i2] =  spad_avg[i2];   
+      }
+
+        
+        
+      num_of_elements++;  
+    
+   }
+
+
+    for(int i2 = 0; i2 < 16; i2++ )  // for each of the 16 SPADS SPAD
+    {
+
+       Serial.printf("spad_avg[%d]: %f \n",i2,spad_avg[i2]);  
+    }
+   
+   // read all SPAD 50 times. For each 4x4 SPAD, take a running average
+
+//uint8_t left2right_top2down_spad_centers[16] = {145, 177, 209, 241, 149, 181, 213, 245, 110, 78, 46, 14, 106, 74, 42, 10};
+//uint16_t left2right_top2down_spad_distances[16];
+
+   // save the running average in a calibration array 
+
+   // write the calibration array
+
+   // 
 
 }
 
