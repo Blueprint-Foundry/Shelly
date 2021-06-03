@@ -28,8 +28,8 @@ jobs:
           sketch-paths: |
             # Configure the action to search all folders under the root of the repository for sketches and compile them.
             # This is formatted as a YAML list, which makes it possible to have multiple sketch paths if needed.
-            - Software/ESP32 Sketchpad/DevKit
-            - Software/ESP32 Sketchpad/Speed Test
+            - Software/ESP32_Sketchpad/DevKit
+            - Software/ESP32_Sketchpad/Speed Test
           libraries: |
             - source-url: https://github.com/bblanchon/ArduinoJson.git
             - source-url: https://github.com/Links2004/arduinoWebSockets.git
