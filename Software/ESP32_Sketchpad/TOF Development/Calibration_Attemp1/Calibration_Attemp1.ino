@@ -144,7 +144,7 @@ void setup()
     {
       Serial.println("VL53L1X is initialized");
 
-      sensor.setDistanceMode(VL53L1X::Medium);
+      sensor.setDistanceMode(VL53L1X::Short);
 
       // ********
       // set ROIs
@@ -395,7 +395,7 @@ void calibrate_allspads()
 
    uint8_t low_byte = 0;
    uint8_t high_byte = 0;
-   uint16_t spad_diff = 6000; 
+   uint16_t spad_diff = 0; 
    int16_t negative_value_check = 0;
 
 

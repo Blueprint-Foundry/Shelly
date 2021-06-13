@@ -1,0 +1,178 @@
+with lights on:
+
+EEPROM readback data[0]: -23 
+EEPROM readback data[1]: -6 
+EEPROM readback data[2]: -6 
+EEPROM readback data[3]: -24 
+EEPROM readback data[4]: -1 
+EEPROM readback data[5]: 23 
+EEPROM readback data[6]: 22 
+EEPROM readback data[7]: -7 
+EEPROM readback data[8]: 0 
+EEPROM readback data[9]: 25 
+EEPROM readback data[10]: 24 
+EEPROM readback data[11]: -6 
+EEPROM readback data[12]: -16 
+EEPROM readback data[13]: 1 
+EEPROM readback data[14]: 3 
+EEPROM readback data[15]: -18 
+
+with lights off:
+
+EEPROM readback data[0]: -23 
+EEPROM readback data[1]: -6 
+EEPROM readback data[2]: -6 
+EEPROM readback data[3]: -26 
+EEPROM readback data[4]: -1 
+EEPROM readback data[5]: 24 
+EEPROM readback data[6]: 21 
+EEPROM readback data[7]: -8 
+EEPROM readback data[8]: 0 
+EEPROM readback data[9]: 25 
+EEPROM readback data[10]: 25 
+EEPROM readback data[11]: -5 
+EEPROM readback data[12]: -15 
+EEPROM readback data[13]: 1 
+EEPROM readback data[14]: 3 
+EEPROM readback data[15]: -18 
+
+------
+
+VL53L1X is initialized
+original width: 16, original height: 16 
+original center: 199 
+new width: 16, new height: 16 
+new center: 199 
+Calculating true distances given 200.000000 mm away flat surface 
+t:-3, p: -3, L2R_T2B_distances[0] = 206.377975 
+t:-3, p: -1, L2R_T2B_distances[1] = 203.516937 
+t:-3, p: 1, L2R_T2B_distances[2] = 203.516937 
+t:-3, p: 3, L2R_T2B_distances[3] = 206.377975 
+t:-1, p: -3, L2R_T2B_distances[4] = 203.516937 
+t:-1, p: -1, L2R_T2B_distances[5] = 200.695557 
+t:-1, p: 1, L2R_T2B_distances[6] = 200.695557 
+t:-1, p: 3, L2R_T2B_distances[7] = 203.516937 
+t:1, p: -3, L2R_T2B_distances[8] = 203.516937 
+t:1, p: -1, L2R_T2B_distances[9] = 200.695557 
+t:1, p: 1, L2R_T2B_distances[10] = 200.695557 
+t:1, p: 3, L2R_T2B_distances[11] = 203.516937 
+t:3, p: -3, L2R_T2B_distances[12] = 206.377975 
+t:3, p: -1, L2R_T2B_distances[13] = 203.516937 
+t:3, p: 1, L2R_T2B_distances[14] = 203.516937 
+t:3, p: 3, L2R_T2B_distances[15] = 206.377975 
+Taking 50 samples of each 16 ROIs to find average reported distance... 
+sample: 0 
+sample: 1 
+sample: 2 
+sample: 3 
+sample: 4 
+sample: 5 
+sample: 6 
+sample: 7 
+sample: 8 
+sample: 9 
+sample: 10 
+sample: 11 
+sample: 12 
+sample: 13 
+sample: 14 
+sample: 15 
+sample: 16 
+sample: 17 
+sample: 18 
+sample: 19 
+sample: 20 
+sample: 21 
+sample: 22 
+sample: 23 
+sample: 24 
+sample: 25 
+sample: 26 
+sample: 27 
+sample: 28 
+sample: 29 
+sample: 30 
+sample: 31 
+sample: 32 
+sample: 33 
+sample: 34 
+sample: 35 
+sample: 36 
+sample: 37 
+sample: 38 
+sample: 39 
+sample: 40 
+sample: 41 
+sample: 42 
+sample: 43 
+sample: 44 
+sample: 45 
+sample: 46 
+sample: 47 
+sample: 48 
+sample: 49 
+find offsets between average and true distances and save in EEPROM... 
+spad_avg: 229.540039, real: 206.377975, calibrated_differences[0]: -23.000000 
+spad_avg: 210.419998, real: 203.516937, calibrated_differences[1]: -6.000000 
+spad_avg: 210.280014, real: 203.516937, calibrated_differences[2]: -6.000000 
+spad_avg: 233.320007, real: 206.377975, calibrated_differences[3]: -26.000000 
+spad_avg: 205.259964, real: 203.516937, calibrated_differences[4]: -1.000000 
+spad_avg: 176.259964, real: 200.695557, calibrated_differences[5]: 24.000000 
+spad_avg: 179.580063, real: 200.695557, calibrated_differences[6]: 21.000000 
+spad_avg: 211.519989, real: 203.516937, calibrated_differences[7]: -8.000000 
+spad_avg: 204.179993, real: 203.516937, calibrated_differences[8]: 0.000000 
+spad_avg: 174.940002, real: 200.695557, calibrated_differences[9]: 25.000000 
+spad_avg: 175.439957, real: 200.695557, calibrated_differences[10]: 25.000000 
+spad_avg: 209.080002, real: 203.516937, calibrated_differences[11]: -5.000000 
+spad_avg: 222.339920, real: 206.377975, calibrated_differences[12]: -15.000000 
+spad_avg: 202.059982, real: 203.516937, calibrated_differences[13]: 1.000000 
+spad_avg: 199.860016, real: 203.516937, calibrated_differences[14]: 3.000000 
+spad_avg: 224.539978, real: 206.377975, calibrated_differences[15]: -18.000000 
+EEPROM readback data[0]: -23 
+EEPROM readback data[1]: -6 
+EEPROM readback data[2]: -6 
+EEPROM readback data[3]: -26 
+EEPROM readback data[4]: -1 
+EEPROM readback data[5]: 24 
+EEPROM readback data[6]: 21 
+EEPROM readback data[7]: -8 
+EEPROM readback data[8]: 0 
+EEPROM readback data[9]: 25 
+EEPROM readback data[10]: 25 
+EEPROM readback data[11]: -5 
+EEPROM readback data[12]: -15 
+EEPROM readback data[13]: 1 
+EEPROM readback data[14]: 3 
+EEPROM readback data[15]: -18 
+left2right_top2down_spad_centers[0] = 145, uncalibrated distance is: 232 
+calibrated_offsets[0] = -23,                 calibrated distance is: 209 
+left2right_top2down_spad_centers[1] = 177, uncalibrated distance is: 211 
+calibrated_offsets[1] = -6,                 calibrated distance is: 205 
+left2right_top2down_spad_centers[2] = 209, uncalibrated distance is: 209 
+calibrated_offsets[2] = -6,                 calibrated distance is: 203 
+left2right_top2down_spad_centers[3] = 241, uncalibrated distance is: 233 
+calibrated_offsets[3] = -26,                 calibrated distance is: 207 
+left2right_top2down_spad_centers[4] = 149, uncalibrated distance is: 204 
+calibrated_offsets[4] = -1,                 calibrated distance is: 203 
+left2right_top2down_spad_centers[5] = 181, uncalibrated distance is: 177 
+calibrated_offsets[5] = 24,                 calibrated distance is: 201 
+left2right_top2down_spad_centers[6] = 213, uncalibrated distance is: 179 
+calibrated_offsets[6] = 21,                 calibrated distance is: 200 
+left2right_top2down_spad_centers[7] = 245, uncalibrated distance is: 210 
+calibrated_offsets[7] = -8,                 calibrated distance is: 202 
+left2right_top2down_spad_centers[8] = 110, uncalibrated distance is: 203 
+calibrated_offsets[8] = 0,                 calibrated distance is: 203 
+left2right_top2down_spad_centers[9] = 78, uncalibrated distance is: 174 
+calibrated_offsets[9] = 25,                 calibrated distance is: 199 
+left2right_top2down_spad_centers[10] = 46, uncalibrated distance is: 175 
+calibrated_offsets[10] = 25,                 calibrated distance is: 200 
+left2right_top2down_spad_centers[11] = 14, uncalibrated distance is: 209 
+calibrated_offsets[11] = -5,                 calibrated distance is: 204 
+left2right_top2down_spad_centers[12] = 106, uncalibrated distance is: 221 
+calibrated_offsets[12] = -15,                 calibrated distance is: 206 
+left2right_top2down_spad_centers[13] = 74, uncalibrated distance is: 199 
+calibrated_offsets[13] = 1,                 calibrated distance is: 200 
+left2right_top2down_spad_centers[14] = 42, uncalibrated distance is: 200 
+calibrated_offsets[14] = 3,                 calibrated distance is: 203 
+left2right_top2down_spad_centers[15] = 10, uncalibrated distance is: 227 
+calibrated_offsets[15] = -18,                 calibrated distance is: 209 
