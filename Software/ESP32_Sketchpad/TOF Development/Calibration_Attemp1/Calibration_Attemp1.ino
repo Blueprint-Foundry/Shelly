@@ -48,7 +48,8 @@ int success_flag = 0;
 uint8_t ROI_width;
 uint8_t  ROI_height;
 uint8_t  ROI_center;
-float distance_in_mm = 0;
+//float distance_in_mm = 0;
+uint32_t distance_in_millimeters = 0;
 
 //WebSocketsClient webSocket; // this is a websocket client object
 char buffer[800];
@@ -65,6 +66,8 @@ uint16_t left2right_top2down_spad_distances[16];
 uint8_t spad_center_index = 0;
 
 int16_t calibrated_offsets[16];
+
+//void calibrate_allspads(void);
 
 void setup()
 {
@@ -222,7 +225,7 @@ void setup()
 
   calibrate_allspads();
   retrieve_EEPROM_data(calibrated_offsets);
-  success_flag = 0;
+  //success_flag = 0;
 
 }
 
@@ -241,6 +244,58 @@ void loop()
   if (success_flag == 1)
   {
 
+    for(int i2 = 0; i2 < 16; i2++ )  // for each of the 16 SPADS SPAD
+    {
+  
+     sensor.setROISize(4, 4);
+     sensor.setROICenter(left2right_top2down_spad_centers[i2]);  // uint8_t left2right_top2down_spad_centers[16] = {145, 177, 209, 241, 149, 181, 213, 245, 110, 78, 46, 14, 106, 74, 42, 10};
+         
+     // get the reading for that SPAD
+      sensor.readSingle(false);  // start single measurement
+  
+      while (!sensor.dataReady()) 
+      {
+      //wait for sensor data
+      }
+  
+     distance_in_millimeters = (uint32_t)(sensor.read(false));  // 
+  
+     Serial.printf("left2right_top2down_spad_centers[%d] = %d, uncalibrated distance is: %d \n",i2, left2right_top2down_spad_centers[i2], distance_in_millimeters);
+
+     distance_in_millimeters = (uint32_t)(((int16_t)sensor.read(false)) + calibrated_offsets[i2]);
+     
+     Serial.printf("calibrated_offsets[%d] = %d,                 calibrated distance is: %d \n",i2, calibrated_offsets[i2], distance_in_millimeters);
+
+     //distance_in_millimeters = distance_in_millimeters + calibrated_offsets[i2];
+     
+    }  
+
+    /*
+    for(int i2 = 0; i2 < 16; i2++ )  // for each of the 16 SPADS SPAD
+    {
+  
+     sensor.setROISize(4, 4);
+     sensor.setROICenter(left2right_top2down_spad_centers[i2]);  // uint8_t left2right_top2down_spad_centers[16] = {145, 177, 209, 241, 149, 181, 213, 245, 110, 78, 46, 14, 106, 74, 42, 10};
+         
+     // get the reading for that SPAD
+      sensor.readSingle(false);  // start single measurement
+  
+      while (!sensor.dataReady()) 
+      {
+      //wait for sensor data
+      }
+  
+     distance_in_millimeters = (uint32_t)(((int16_t)sensor.read(false)) + calibrated_offsets);  // 
+  
+     Serial.printf("left2right_top2down_spad_centers[%d] = %d, calibrated distance is: %d \n",i2, left2right_top2down_spad_centers[i2], distance_in_millimeters);
+
+     
+    }  
+    */     
+
+
+
+/*
     sensor.readSingle(false);  // start single measurement
 
     while (!sensor.dataReady()) {
@@ -251,7 +306,7 @@ void loop()
     sensor.setROICenter(topright_spad_centers[spad_center_index]);
 
 
-    distance_in_mm = (sensor.read(false) + calibrated_offsets[spad_center_index]) / 1000.0;  // actually distance in meters
+    distance_in_mm = (sensor.read(false) + calibrated_offsets[spad_center_index]);  // actually distance in millimeters
 
     //Serial.printf("spad_index: %d, spad center: %d, distance is: %f \n", spad_center_index, topright_spad_centers[spad_center_index], distance_in_mm );
 
@@ -301,14 +356,15 @@ void loop()
 
     }
 
-
-
+    */
+    success_flag = 0; // only do once
   }
   else
   {
     Serial.println("Failure :(");
     delay(2000);
   }
+  
 
 }
 
@@ -329,9 +385,11 @@ void calibrate_allspads()
 {
 
 
-   float spad_avg[16]; 
+   //float spad_avg[16]; 
+   float spad_avg[32]; 
    float spad_current_data[16];   
-   float spad_avg_old[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; 
+   //float spad_avg_old[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; 
+   float spad_avg_old[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
    int num_of_elements = 1;
    float calibrated_differences[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // the error for each SPAD location
 
@@ -344,17 +402,19 @@ void calibrate_allspads()
   int theta = 0;                  // horizontal angle in degrees, positive right
   int phi = 0;                    // vertical angle in degrees, positive down
   
-  float flat_distance = 150.0;     // in mm - 15cm = 150mm
-  float L2R_T2B_distances[16];    // left to right, top to bottom SPADs
+  float flat_distance = 140.0;     // in mm - 15cm = 150mm
+  //float L2R_T2B_distances[16];    // left to right, top to bottom SPADs
+  float L2R_T2B_distances[32];
   float z = flat_distance;        // axis straight ahead
   float a = 0;                    //distance vector projected on the X-Z plane
   float sub_angle = 27.0/8.0;     
   
   int count = 0;
+  int data_count = 0;
 
   // find the theoretical hypotenuse distances away from flat surface
-  Serial.printf("Calculating true distances given %d mm away flat surface \n");
-  Serial.printf("t:%d, p: %d, L2R_T2B_distances[%d] = %f \n",theta,phi,count,L2R_T2B_distances[count]);
+  Serial.printf("Calculating true distances given %f mm away flat surface \n",flat_distance);
+  //Serial.printf("t:%d, p: %d, L2R_T2B_distances[%d] = %f \n",theta,phi,count,L2R_T2B_distances[count]);
   for (theta = -3; theta < 4; theta = theta + 2)
   {
     a = z/cos(to_rad(theta*sub_angle)); 
@@ -396,7 +456,7 @@ void calibrate_allspads()
             //wait for sensor data
           }
 
-         spad_current_data[i2] = (float)(sensor.read(false) / 1000.0);  
+         spad_current_data[i2] = (float)(sensor.read(false));  // perhaps we shouldn't divide by 1000 if converting to uint16_t later
 
          // New average = old average * (n-1)/n + new value /n
          spad_avg[i2] = spad_avg_old[i2]*((float)num_of_elements - 1)/(float)num_of_elements + spad_current_data[i2]/(float)num_of_elements;
@@ -410,50 +470,67 @@ void calibrate_allspads()
     
    }
 
-    Serial.printf("Takifind offsets between average and true distances and save in EEPROM... \n");
+    Serial.printf("find offsets between average and true distances and save in EEPROM... \n");
     count = 0;
     while(count < 32)
     {
-      if((count % 2 == 0))
+      
+      if((count % 2 == 0) && (count >= 0))
       {
+         data_count = count/2;
           // error_diff = real - measured (to get back real = measured + error_diff_fromEEPROM)
-         negative_value_check = L2R_T2B_distances[count] - spad_avg[count]
+         negative_value_check = (int16_t)(L2R_T2B_distances[data_count] - spad_avg[data_count]);
+
+         //Serial.printf("spad_avg[%d] = %f \n",data_count,spad_avg[data_count]);
+         
          if(negative_value_check < 0)
          {
 
-            calibrated_differences[count] = 1*negative_value_check;
+            calibrated_differences[data_count] = negative_value_check;
 
-            spad_diff = (uint16_t)(1*negative_value_check) ; 
+            spad_diff = (uint16_t)(-1*negative_value_check) ; 
             high_byte = (uint8_t)(spad_diff  >> 8);
             high_byte =  high_byte | (0x80);              // set MSB to 1 if value is negative
-            low_byte  = (uint8_t)(spad_diff & 0x00FF);
+            //low_byte  = (uint8_t)(spad_diff & 0x00FF);
 
-            Serial.printf("calibrated_differences[count]: -%f \n",count,calibrated_differences[count]);
+            Serial.printf("spad_avg: %f, real: %f, calibrated_differences[%d]: %f \n",spad_avg[data_count],L2R_T2B_distances[data_count],data_count,calibrated_differences[data_count]);
+          //  Serial.printf("negative_value_check: %d ",negative_value_check);
+          //  Serial.printf("spad_diff: %d ",spad_diff);
          }
          else
          {
 
-            calibrated_differences[count] = negative_value_check;  // ?? set MSB if negative
+            calibrated_differences[data_count] = negative_value_check;  // ?? set MSB if negative
            
             spad_diff = (uint16_t)negative_value_check ; 
             high_byte = (uint8_t)(spad_diff  >> 8);
-            low_byte  = (uint8_t)(spad_diff & 0x00FF);
+            //low_byte  = (uint8_t)(spad_diff & 0x00FF);
            
-            Serial.printf("calibrated_differences[count]: %f \n",count,calibrated_differences[count]);
+            Serial.printf("spad_avg: %f, real: %f, calibrated_differences[%d]: %f \n",spad_avg[data_count],L2R_T2B_distances[data_count],data_count,calibrated_differences[data_count]);
+         //   Serial.printf("negative_value_check: %d ",negative_value_check);
+          //  Serial.printf("spad_diff: %d ",spad_diff);            
          }
           
          
-         Serial.printf("calibrated_differences[count]: %f \n",count,calibrated_differences[count]);  
+         //Serial.printf("calibrated_differences[%d]: %f \n",count,calibrated_differences[count]);  
   
   
+        //Serial.printf("spad_diff = %d \n",spad_diff);
 
+         //   high_byte = (uint8_t)(spad_diff  >> 8);
+            //high_byte =  high_byte | (0x80);              // set MSB to 1 if value is negative
+            low_byte  = (uint8_t)(spad_diff & 0x00FF);
 
         EEPROM.write(count,high_byte);
+       // Serial.printf("writing high byte: %d \n",high_byte);
         count++;
         EEPROM.write(count,low_byte);  
+       //  Serial.printf("writing low byte: %d \n",low_byte);       
         count++;     
                 
-      }   
+      } 
+
+      
     }
 
     EEPROM.commit(); 
@@ -472,6 +549,8 @@ void retrieve_EEPROM_data(int16_t *data_array_pointer)
     int negative_true_flag = 0;
 
     int data_count = 0;
+    int count = 0;
+    
     while(count < 32)
     {
       if((count % 2 == 0))
@@ -479,10 +558,13 @@ void retrieve_EEPROM_data(int16_t *data_array_pointer)
         data_count = count/2;
         read_highbyte = (uint8_t)EEPROM.read(count);
 
-        if(read_highbyte > 0x80)
+ 
+        if(read_highbyte >= 0x80)
         {
+          //Serial.printf("negative read_highbyte: %d || ",read_highbyte);
           negative_true_flag = 1;
-          read_highbyte = read_highbyte & ~(0x8000);  // remove the 1 set to indicate a negative
+          read_highbyte = read_highbyte & ~(0x80);  // remove the 1 set to indicate a negative
+          //Serial.printf("new read_highbyte: %d \n ",read_highbyte);         
         }
         else
         {
@@ -493,22 +575,29 @@ void retrieve_EEPROM_data(int16_t *data_array_pointer)
         read_lowbyte  = (uint8_t)EEPROM.read(count); 
         count++;   
 
+        //Serial.printf("lowbyte: %d \n ",read_lowbyte); 
         
         read_spad_data = (uint16_t)(read_highbyte << 8);
         read_spad_data = (uint16_t)(read_spad_data + read_lowbyte);
 
+
+        //Serial.printf("read_spad_data: %d \n ",read_spad_data); 
  
         if(negative_true_flag == 1)
         {
-          data_array_pointer[data_count] = -1*read_spad_data;
+          //Serial.printf("[%d]read_spad_data: - %d || ",data_count,read_spad_data); 
+          data_array_pointer[data_count] = (int16_t)(-1*(int16_t)(read_spad_data));
+          //Serial.printf("data_array_pointer[%d] = %d \n",data_count,data_array_pointer[data_count]); 
         }
         else
         {
-          data_array_pointer[data_count] = read_spad_data;
+          //Serial.printf("[%d]read_spad_data: + %d || ",data_count,read_spad_data);
+          data_array_pointer[data_count] = (int16_t)(read_spad_data);
+          //Serial.printf("data_array_pointer[%d] = %d \n",data_count,data_array_pointer[data_count]); 
           
         }
 
-        Serial.printf("EEPROM readback data[data_count]: %d \n",data_array_pointer[data_count]);        
+        Serial.printf("EEPROM readback data[%d]: %d \n",data_count,data_array_pointer[data_count]);        
       }   
     }  
 
